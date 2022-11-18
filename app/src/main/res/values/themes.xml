@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.TestCase" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+    <style name="Theme.TestCase" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/orange</item>
         <item name="colorPrimaryVariant">@color/orangeDark</item>
@@ -40,4 +40,5 @@
     <style name="ProgressBar">
         <item name="colorAccent">@color/orange</item>
     </style>
+
 </resources>

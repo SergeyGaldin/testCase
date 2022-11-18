@@ -3,4 +3,6 @@
     <string name="text_hint_login">Введите логин</string>
     <string name="text_hint_password">Введите пароль</string>
     <string name="text_button_come">Войти</string>
+    <string name="search">Поиск</string>
+    <string name="filter">Фильтр</string>
 </resources>
