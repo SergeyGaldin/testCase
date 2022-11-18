@@ -22,6 +22,7 @@
                 android:id="@+id/textLogin"
                 style="@style/TextInputEditText"
                 android:hint="@string/text_hint_login"
+                android:inputType="text"
                 android:maxLength="10" />
 
         </com.google.android.material.textfield.TextInputLayout>

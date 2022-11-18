@@ -9,6 +9,7 @@ import android.widget.ProgressBar
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.example.testcase.constants.Constants
 import com.example.testcase.constants.Methods
 import com.example.testcase.models.User
@@ -70,22 +71,17 @@ class SignInActivity : AppCompatActivity() {
                 progressBar.visibility = View.GONE
                 buttonSignIn.isClickable = true
                 try {
-                    val jsonObject = JSONObject(it)
-                    if (!jsonObject.getBoolean("error")) {
+                    if (!JSONObject(it).getBoolean("error")) {
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
-                    } else {
-                        Methods.callSnackbar(view, jsonObject.getString("message"))
-                    }
+                    } else Methods.callSnackbar(view, JSONObject(it).getString("message"))
                 } catch (e: JSONException) {
-                    e.printStackTrace()
+                    Methods.callSnackbar(view, e.message.toString())
                 }
             }, Response.ErrorListener {
                 progressBar.visibility = View.GONE
                 buttonSignIn.isClickable = true
-                if (it?.message != null) {
-                    Methods.callSnackbar(view, it.message!!)
-                }
+                if (it?.message != null) Methods.callSnackbar(view, it.message!!)
             }) {
                 @Throws(AuthFailureError::class)
                 override fun getParams(): MutableMap<String, String> {
@@ -95,6 +91,6 @@ class SignInActivity : AppCompatActivity() {
                     return params
                 }
             }
-        RequestHandler.getInstance(this)!!.addToRequestQueue(stringRequest)
+        Volley.newRequestQueue(this).add(stringRequest)
     }
 }
