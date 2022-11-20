@@ -1,8 +1,10 @@
 package com.example.testcase
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -72,6 +74,8 @@ class SignInActivity : AppCompatActivity() {
                 buttonSignIn.isClickable = true
                 try {
                     if (!JSONObject(it).getBoolean("error")) {
+                        User.setUserName(JSONObject(it).getString("user_name").toString())
+                        User.setOrganization(JSONObject(it).getString("organization").toString())
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     } else Methods.callSnackbar(view, JSONObject(it).getString("message"))
