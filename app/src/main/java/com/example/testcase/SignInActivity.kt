@@ -1,10 +1,8 @@
 package com.example.testcase
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -53,11 +51,11 @@ class SignInActivity : AppCompatActivity() {
         inputLogin.error = null
         inputPassword.error = null
         User.setData(textLogin.text.toString(), textPassword.text.toString())
-        if (User.getLogin().isEmpty()) {
+        if (User.getLogin.isEmpty()) {
             inputLogin.error = "Поле пустое"
             return false
         }
-        if (User.getPassword().isEmpty()) {
+        if (User.getPassword.isEmpty()) {
             inputPassword.error = "Поле пустое"
             return false
         }
@@ -90,8 +88,8 @@ class SignInActivity : AppCompatActivity() {
                 @Throws(AuthFailureError::class)
                 override fun getParams(): MutableMap<String, String> {
                     val params: MutableMap<String, String> = HashMap()
-                    params["login"] = User.getLogin()
-                    params["password"] = User.getPassword()
+                    params["login"] = User.getLogin
+                    params["password"] = User.getPassword
                     return params
                 }
             }

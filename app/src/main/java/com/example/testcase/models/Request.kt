@@ -1,38 +1,30 @@
 package com.example.testcase.models
 
-object Request {
-    private lateinit var nameRequest: String
-    private lateinit var priorityRequest: String
-    private lateinit var statusRequest: String
-    private lateinit var dateRequest: String
-    private lateinit var executorRequest: String
+class Request(
+    nameRequest: String,
+    priorityRequest: String,
+    statusRequest: String,
+    dateRequest: String,
+    executorRequest: String
+) {
+    private var nameRequests: String = nameRequest
+    private var priorityRequests: String = priorityRequest
+    private var statusRequests: String = statusRequest
+    private var dateRequests: String = dateRequest
+    private var executorRequests: String = executorRequest
+
     val getNameRequest: String
-        get() = nameRequest
+        get() = nameRequests
 
     val getPriorityRequest: String
-        get() = priorityRequest
+        get() = priorityRequests
 
     val getStatusRequest: String
-        get() = statusRequest
+        get() = statusRequests
 
     val getDateRequest: String
-        get() = dateRequest
+        get() = dateRequests
 
     val getExecutorRequest: String
-        get() = executorRequest
-
-    fun setData(
-        nameRequest: String,
-        priorityRequest: String,
-        statusRequest: String,
-        dateRequest: String,
-        executorRequest: String
-    ) {
-        this.nameRequest = nameRequest
-        this.priorityRequest = priorityRequest
-        this.statusRequest = statusRequest
-        this.dateRequest = dateRequest
-        this.executorRequest = executorRequest
-    }
-
+        get() = executorRequests
 }

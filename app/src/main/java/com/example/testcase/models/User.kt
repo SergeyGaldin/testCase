@@ -6,28 +6,24 @@ object User {
     private lateinit var user_name: String
     private lateinit var organization: String
 
-    fun getLogin(): String {
-        return login
-    }
+    val getLogin: String
+        get() = login
 
-    fun getPassword(): String {
-        return password
-    }
+    val getPassword: String
+        get() = password
 
-    fun getUserName(): String {
-        return user_name
-    }
+    val getUserName: String
+        get() = user_name
 
-    fun getOrganization(): String {
-        return organization
+    val getOrganization: String
+        get() = organization
+
+    fun setOrganization(organization: String) {
+        this.organization = organization
     }
 
     fun setUserName(user_name: String) {
         this.user_name = user_name
-    }
-
-    fun setOrganization(organization: String) {
-        this.organization = organization
     }
 
     fun setData(login: String, password: String) {

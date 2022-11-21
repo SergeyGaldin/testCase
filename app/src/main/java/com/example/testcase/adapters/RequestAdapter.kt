@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.testcase.R
 import com.example.testcase.models.Request
 
-class RequestAdapter(context: Context, listRequest: List<Request>) :
+class RequestAdapter(context: Context, listRequest: ArrayList<Request>) :
     RecyclerView.Adapter<RequestAdapter.RequestAdapterVH>() {
     private var layoutInflater: LayoutInflater
     private var listRequest: List<Request>
@@ -18,7 +18,6 @@ class RequestAdapter(context: Context, listRequest: List<Request>) :
         layoutInflater = LayoutInflater.from(context)
         this.listRequest = listRequest
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RequestAdapterVH {
         return RequestAdapterVH(layoutInflater.inflate(R.layout.layout_request, parent, false))
@@ -37,7 +36,7 @@ class RequestAdapter(context: Context, listRequest: List<Request>) :
         return listRequest.size
     }
 
-   class RequestAdapterVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class RequestAdapterVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var nameRequest: TextView
         var priorityRequest: TextView
         var statusRequest: TextView
