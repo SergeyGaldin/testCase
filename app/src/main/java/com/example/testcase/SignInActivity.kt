@@ -73,7 +73,9 @@ class SignInActivity : AppCompatActivity() {
                 try {
                     if (!JSONObject(it).getBoolean("error")) {
                         User.setUserName(JSONObject(it).getString("user_name").toString())
-                        User.setOrganization(JSONObject(it).getString("organization").toString())
+                        User.setOrganization(
+                            JSONObject(it).getString("name_organization").toString()
+                        )
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     } else Methods.callSnackbar(view, JSONObject(it).getString("message"))
