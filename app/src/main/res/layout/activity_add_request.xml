@@ -166,12 +166,14 @@
                 <TextView
                     android:id="@+id/noneText_author"
                     style="@style/TittleTextView"
+                    android:layout_centerHorizontal="true"
                     android:text="@string/text_author" />
 
                 <TextView
                     android:id="@+id/author"
                     style="@style/SelectTextView"
-                    android:layout_below="@+id/noneText_author" />
+                    android:layout_below="@+id/noneText_author"
+                    android:layout_centerHorizontal="true" />
 
             </RelativeLayout>
 
@@ -183,12 +185,14 @@
                 <TextView
                     android:id="@+id/noneText_date_create"
                     style="@style/TittleTextView"
+                    android:layout_centerHorizontal="true"
                     android:text="@string/text_date_create" />
 
                 <TextView
                     android:id="@+id/date_create"
                     style="@style/SelectTextView"
-                    android:layout_below="@+id/noneText_date_create" />
+                    android:layout_below="@+id/noneText_date_create"
+                    android:layout_centerHorizontal="true" />
 
             </RelativeLayout>
 
@@ -215,5 +219,13 @@
             android:text="@string/save" />
 
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:theme="@style/ProgressBar"
+        android:visibility="gone" />
 
 </RelativeLayout>

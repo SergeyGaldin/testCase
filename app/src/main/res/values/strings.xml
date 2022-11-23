@@ -21,4 +21,7 @@
     <string name="text_date_begine">Плановая дата</string>
     <string name="text_date_create">Дата создания</string>
     <string name="text_author">Автор</string>
+
+    <string name="text_hint_name_request">Введите название заявки</string>
+    <string name="ok">Ок</string>
 </resources>
