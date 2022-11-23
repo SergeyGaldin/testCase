@@ -11,5 +11,6 @@
     <color name="orange">#FF9800</color>
     <color name="orangeDark">#FB8C00</color>
     <color name="error">#D93A02</color>
+    <color name="grey">#2B2B2B</color>
     <color name="invisible">#00000000</color>
 </resources>

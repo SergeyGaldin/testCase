@@ -3,13 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android Studio/TestCase/app/src/main/res/drawable/background_button_black.xml" value="0.1505" />
         <entry key="..\:/Android Studio/TestCase/app/src/main/res/drawable/background_button_orange.xml" value="0.158" />
+        <entry key="..\:/Android Studio/TestCase/app/src/main/res/drawable/ic_add.xml" value="0.1505" />
         <entry key="..\:/Android Studio/TestCase/app/src/main/res/drawable/ic_filter.xml" value="0.158" />
         <entry key="..\:/Android Studio/TestCase/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/Android Studio/TestCase/app/src/main/res/drawable/ic_lock.xml" value="0.158" />
         <entry key="..\:/Android Studio/TestCase/app/src/main/res/drawable/ic_search.xml" value="0.158" />
         <entry key="..\:/Android Studio/TestCase/app/src/main/res/drawable/start_screen.xml" value="0.1395" />
         <entry key="..\:/Android Studio/TestCase/app/src/main/res/drawable/user.xml" value="0.158" />
+        <entry key="..\:/Android Studio/TestCase/app/src/main/res/layout/activity_add_request.xml" value="0.33" />
         <entry key="..\:/Android Studio/TestCase/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Android Studio/TestCase/app/src/main/res/layout/activity_sign_in.xml" value="0.25885416666666666" />
         <entry key="..\:/Android Studio/TestCase/app/src/main/res/layout/activity_splash_screen.xml" value="0.25885416666666666" />

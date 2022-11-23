@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,7 @@ import com.android.volley.toolbox.Volley
 import com.example.testcase.adapters.RequestAdapter
 import com.example.testcase.constants.Constants
 import com.example.testcase.models.Request
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONException
 
 class MainActivity : AppCompatActivity() {
@@ -41,6 +43,10 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
         recyclerView = findViewById(R.id.recyclerView)
         progressBar = findViewById(R.id.progressBar)
+
+        findViewById<FloatingActionButton>(R.id.buttonAdd).setOnClickListener {
+            startActivity(Intent(this, AddRequestActivity::class.java))
+        }
     }
 
     private fun initializeAdapter() {

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddRequestActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/black"
+        app:title="Создание заявки"
+        app:titleTextColor="@color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/groupButton"
+        android:layout_below="@+id/toolbar">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/nameRequest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/textAddRequest"
+                android:textSize="22sp" />
+
+            <RelativeLayout
+                android:id="@+id/layoutDeposit"
+                style="@style/MyRelativeLayout"
+                android:layout_below="@+id/nameRequest">
+
+                <TextView
+                    android:id="@+id/noneText_deposit"
+                    style="@style/TittleTextView"
+                    android:text="@string/text_deposit" />
+
+                <TextView
+                    style="@style/SymbolTextView"
+                    android:layout_toEndOf="@id/noneText_deposit"
+                    android:text="@string/symbol" />
+
+                <TextView
+                    android:id="@+id/deposit"
+                    style="@style/SelectTextView"
+                    android:layout_below="@+id/noneText_deposit" />
+
+                <Button
+                    android:id="@+id/buttonSelectingDeposit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_below="@id/deposit"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/background_button_black"
+                    android:paddingHorizontal="10dp"
+                    android:text="@string/selecting_deposit"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutService"
+                style="@style/MyRelativeLayout"
+                android:layout_below="@+id/layoutDeposit">
+
+                <TextView
+                    android:id="@+id/noneText_service"
+                    style="@style/TittleTextView"
+                    android:text="@string/text_service" />
+
+                <TextView
+                    style="@style/SymbolTextView"
+                    android:layout_toEndOf="@id/noneText_service"
+                    android:text="@string/symbol" />
+
+                <TextView
+                    android:id="@+id/service"
+                    style="@style/SelectTextView"
+                    android:layout_below="@+id/noneText_service" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutExecutor"
+                style="@style/MyRelativeLayout"
+                android:layout_below="@+id/layoutService">
+
+                <TextView
+                    android:id="@+id/noneText_executor"
+                    style="@style/TittleTextView"
+                    android:text="@string/text_executor" />
+
+                <TextView
+                    android:id="@+id/executor"
+                    style="@style/SelectTextView"
+                    android:layout_below="@+id/noneText_executor" />
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/noneView"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/layoutExecutor"
+                android:layout_marginTop="20dp"
+                android:background="@color/grey" />
+
+            <RelativeLayout
+                android:id="@+id/layoutPriority"
+                style="@style/MyRelativeLayout"
+                android:layout_below="@+id/noneView">
+
+                <TextView
+                    android:id="@+id/noneText_priority"
+                    style="@style/TittleTextView"
+                    android:text="@string/text_priority" />
+
+                <TextView
+                    style="@style/SymbolTextView"
+                    android:layout_toEndOf="@id/noneText_priority"
+                    android:text="@string/symbol" />
+
+                <TextView
+                    android:id="@+id/priority"
+                    style="@style/SelectTextView"
+                    android:layout_below="@+id/noneText_priority" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutDateBegine"
+                style="@style/MyRelativeLayout"
+                android:layout_below="@+id/layoutPriority">
+
+                <TextView
+                    android:id="@+id/noneText_date_begine"
+                    style="@style/TittleTextView"
+                    android:text="@string/text_date_begine" />
+
+                <TextView
+                    style="@style/SymbolTextView"
+                    android:layout_toEndOf="@id/noneText_date_begine"
+                    android:text="@string/symbol" />
+
+                <TextView
+                    android:id="@+id/date_begine"
+                    style="@style/SelectTextView"
+                    android:layout_below="@+id/noneText_date_begine" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutAuthor"
+                style="@style/MyRelativeLayout"
+                android:layout_below="@+id/layoutDateBegine">
+
+                <TextView
+                    android:id="@+id/noneText_author"
+                    style="@style/TittleTextView"
+                    android:text="@string/text_author" />
+
+                <TextView
+                    android:id="@+id/author"
+                    style="@style/SelectTextView"
+                    android:layout_below="@+id/noneText_author" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutDateCreate"
+                style="@style/MyRelativeLayout"
+                android:layout_below="@+id/layoutAuthor">
+
+                <TextView
+                    android:id="@+id/noneText_date_create"
+                    style="@style/TittleTextView"
+                    android:text="@string/text_date_create" />
+
+                <TextView
+                    android:id="@+id/date_create"
+                    style="@style/SelectTextView"
+                    android:layout_below="@+id/noneText_date_create" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/groupButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/buttonCancel"
+            style="@style/ButtonsDark"
+            android:text="@string/cancel" />
+
+        <Button
+            android:id="@+id/buttonSave"
+            style="@style/ButtonsDark"
+            android:text="@string/save" />
+
+    </LinearLayout>
+
+</RelativeLayout>
