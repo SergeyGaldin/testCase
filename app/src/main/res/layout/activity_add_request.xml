@@ -21,9 +21,11 @@
         android:layout_below="@+id/toolbar">
 
         <RelativeLayout
+            android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp">
+            android:padding="20dp"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/nameRequest"
@@ -226,6 +228,6 @@
         android:layout_height="60dp"
         android:layout_centerInParent="true"
         android:theme="@style/ProgressBar"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
 </RelativeLayout>

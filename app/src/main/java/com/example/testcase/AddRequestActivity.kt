@@ -1,18 +1,27 @@
 package com.example.testcase
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.Volley
+import com.example.testcase.constants.Constants
 import com.example.testcase.constants.Methods
+import com.example.testcase.models.Executor
 import com.example.testcase.models.User
 import com.google.android.material.textfield.TextInputEditText
+import org.json.JSONException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class AddRequestActivity : AppCompatActivity() {
     private lateinit var nameRequest: TextView
@@ -24,12 +33,14 @@ class AddRequestActivity : AppCompatActivity() {
     private lateinit var author: TextView
     private lateinit var dateCreate: TextView
     private lateinit var progressBar: ProgressBar
+    private lateinit var content: RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_request)
         init()
         clicks()
+        getDataDeposit()
     }
 
     private fun init() {
@@ -42,6 +53,7 @@ class AddRequestActivity : AppCompatActivity() {
         author = findViewById(R.id.author)
         dateCreate = findViewById(R.id.date_create)
         progressBar = findViewById(R.id.progressBar)
+        content = findViewById(R.id.content)
     }
 
     private fun clicks() {
@@ -82,5 +94,80 @@ class AddRequestActivity : AppCompatActivity() {
     private fun setValueFields() {
         dateCreate.text = SimpleDateFormat("dd.MM.yyyy HH:mm").format(Date())
         author.text = User.getUserName
+    }
+
+    private fun getDataDeposit() {
+        val stringRequest = JsonArrayRequest(Constants.URL_GET_DATA_DEPOSIT, { response ->
+            try {
+                val arrayList = ArrayList<String>()
+                for (i in 0 until response.length()) {
+                    arrayList.add(response.getJSONObject(i).getString("name_deposit"))
+                }
+                getDataService()
+            } catch (e: JSONException) {
+                Log.d(TAG, "getDataDeposit: ${e.message}")
+            }
+        }) { error ->
+            Log.d(TAG, "getDataDeposit: ${error.message}")
+        }
+        Volley.newRequestQueue(this).add(stringRequest)
+    }
+
+    private fun getDataService() {
+        val stringRequest = JsonArrayRequest(Constants.URL_GET_DATA_SERVICE, { response ->
+            try {
+                val arrayList = ArrayList<String>()
+                for (i in 0 until response.length()) {
+                    arrayList.add(response.getJSONObject(i).getString("name_service"))
+                }
+                getDataPriority()
+            } catch (e: JSONException) {
+                Log.d(TAG, "getDataService: ${e.message}")
+            }
+        }) { error ->
+            Log.d(TAG, "getDataService: ${error.message}")
+        }
+        Volley.newRequestQueue(this).add(stringRequest)
+    }
+
+    private fun getDataPriority() {
+        val stringRequest = JsonArrayRequest(Constants.URL_GET_DATA_PRIORITY, { response ->
+            try {
+                val arrayList = ArrayList<String>()
+                for (i in 0 until response.length()) {
+                    arrayList.add(response.getJSONObject(i).getString("name_priority"))
+                }
+                getDataExecutor()
+            } catch (e: JSONException) {
+                Log.d(TAG, "getDataPriority: ${e.message}")
+            }
+        }) { error ->
+            Log.d(TAG, "getDataPriority: ${error.message}")
+        }
+        Volley.newRequestQueue(this).add(stringRequest)
+    }
+
+    private fun getDataExecutor() {
+        val stringRequest = JsonArrayRequest(Constants.URL_GET_DATA_EXECUTOR, { response ->
+            try {
+                val arrayList = ArrayList<Executor>()
+                for (i in 0 until response.length()) {
+                    val objectRequest = response.getJSONObject(i)
+                    arrayList.add(
+                        Executor(
+                            objectRequest.getString("user_name"),
+                            objectRequest.getString("name_organization")
+                        )
+                    )
+                }
+                content.visibility = View.VISIBLE
+                progressBar.visibility = View.GONE
+            } catch (e: JSONException) {
+                Log.d(TAG, "getDataExecutor: ${e.message}")
+            }
+        }) { error ->
+            Log.d(TAG, "getDataExecutor: ${error.message}")
+        }
+        Volley.newRequestQueue(this).add(stringRequest)
     }
 }
