@@ -2,6 +2,7 @@ package com.example.testcase
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -14,7 +15,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.AuthFailureError
+import com.android.volley.Response
 import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.testcase.adapters.DepositAdapter
 import com.example.testcase.adapters.ExecutorAdapter
@@ -25,9 +29,11 @@ import com.example.testcase.constants.Methods
 import com.example.testcase.models.*
 import com.google.android.material.textfield.TextInputEditText
 import org.json.JSONException
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.jvm.Throws
 
 class AddRequestActivity : AppCompatActivity() {
     private lateinit var nameRequest: TextView
@@ -39,12 +45,18 @@ class AddRequestActivity : AppCompatActivity() {
     private lateinit var author: TextView
     private lateinit var dateCreate: TextView
     private lateinit var content: RelativeLayout
+    private lateinit var buttonSave: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var recyclerView: RecyclerView
+    private lateinit var setRequest: SetRequest
     private val listExecutor = ArrayList<Executor>()
     private val listDeposit = ArrayList<Deposit>()
     private val listService = ArrayList<Service>()
     private val listPriority = ArrayList<Priority>()
+    private var idDeposit = -1
+    private var idService = -1
+    private var idExecutor = -1
+    private var idPriority = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,19 +75,20 @@ class AddRequestActivity : AppCompatActivity() {
         dateBegine = findViewById(R.id.date_begine)
         author = findViewById(R.id.author)
         dateCreate = findViewById(R.id.date_create)
+        buttonSave = findViewById(R.id.buttonSave)
         progressBar = findViewById(R.id.progressBar)
         content = findViewById(R.id.content)
     }
 
     private fun clicks() {
+        buttonSave.setOnClickListener { setDataRequest(it, buttonSave) }
         findViewById<Button>(R.id.buttonCancel).setOnClickListener { onBackPressed() }
-        findViewById<Button>(R.id.buttonSave).setOnClickListener { }
         findViewById<Button>(R.id.buttonSelectingDeposit).setOnClickListener { openAlertDialogDeposit() }
         nameRequest.setOnClickListener { openAlertDialogNameRequest() }
         service.setOnClickListener { openAlertDialogService() }
         executor.setOnClickListener { openAlertDialogExecutor() }
         priority.setOnClickListener { openAlertDialogPriority() }
-        dateBegine.setOnClickListener {  }
+        dateBegine.setOnClickListener { }
     }
 
     private fun returnView(layout: Int): View {
@@ -117,6 +130,7 @@ class AddRequestActivity : AppCompatActivity() {
         initializeRecyclerView(viewAlert)
         val itemOnClick: (Int) -> Unit = { position ->
             executor.text = listExecutor[position].getNameExecutor
+            idExecutor = position + 1
             alertDialog.dismiss()
         }
         recyclerView.adapter = ExecutorAdapter(this, listExecutor, itemClickListener = itemOnClick)
@@ -129,6 +143,7 @@ class AddRequestActivity : AppCompatActivity() {
         initializeRecyclerView(viewAlert)
         val itemOnClick: (Int) -> Unit = { position ->
             deposit.text = listDeposit[position].getDeposit
+            idDeposit = position + 1
             alertDialog.dismiss()
         }
         Log.d(TAG, "getDataPriority: ${listPriority.size}")
@@ -142,6 +157,7 @@ class AddRequestActivity : AppCompatActivity() {
         initializeRecyclerView(viewAlert)
         val itemOnClick: (Int) -> Unit = { position ->
             service.text = listService[position].getService
+            idService = position + 1
             alertDialog.dismiss()
         }
         recyclerView.adapter = ServiceAdapter(this, listService, itemClickListener = itemOnClick)
@@ -154,6 +170,7 @@ class AddRequestActivity : AppCompatActivity() {
         initializeRecyclerView(viewAlert)
         val itemOnClick: (Int) -> Unit = { position ->
             priority.text = listPriority[position].getPriority
+            idPriority = position + 1
             alertDialog.dismiss()
         }
         recyclerView.adapter = PriorityAdapter(this, listPriority, itemClickListener = itemOnClick)
@@ -235,5 +252,76 @@ class AddRequestActivity : AppCompatActivity() {
             Log.d(TAG, "getDataExecutor: ${error.message}")
         }
         Volley.newRequestQueue(this).add(stringRequest)
+    }
+
+    private fun setDataRequest(view: View, button: Button) {
+        if (checkSetData()) {
+            button.isClickable = false
+            progressBar.visibility = View.VISIBLE
+            val stringRequest =
+                object : StringRequest(Method.POST, Constants.URL_SET_DATA_REQUEST, Response.Listener {
+                    progressBar.visibility = View.GONE
+                    button.isClickable = true
+                    try {
+                        if (!JSONObject(it).getBoolean("error")) {
+                            val jsonObject = JSONObject(it)
+                            Log.d(TAG, "setDataRequest")
+//                            startActivity(Intent(this, MainActivity::class.java))
+//                            finish()
+                        } else Methods.callSnackbar(view, JSONObject(it).getString("message"))
+                    } catch (e: JSONException) {
+                        Methods.callSnackbar(view, e.message.toString())
+                    }
+                }, Response.ErrorListener {
+                    progressBar.visibility = View.GONE
+                    button.isClickable = true
+                    if (it?.message != null) Methods.callSnackbar(view, it.message!!)
+                }) {
+                    @Throws(AuthFailureError::class)
+                    override fun getParams(): MutableMap<String, String> {
+                        val params: MutableMap<String, String> = HashMap()
+                        params["name_request"] = setRequest.getNameRequest
+                        params["deposit"] = setRequest.getDepositRequest.toString()
+                        params["service"] = setRequest.getServiceRequest.toString()
+                        params["executor"] = setRequest.getExecutorRequest.toString()
+                        params["priority"] = setRequest.getPriorityRequest.toString()
+                        params["date_creation"] = setRequest.getDateCreationRequest
+                        params["date_begine"] = setRequest.getDateBegineRequest
+                        params["author"] = setRequest.getAuthorRequest
+                        return params
+                    }
+                }
+            Volley.newRequestQueue(this).add(stringRequest)
+        }
+    }
+
+    private fun checkSetData(): Boolean {
+        setRequest = SetRequest(
+            nameRequest.text.toString(),
+            idDeposit,
+            idService,
+            idExecutor,
+            idPriority,
+//            author.text.toString()
+//            dateCreate.text.toString(),
+//            dateBegine.text.toString(),
+            "11.11.1111",
+            "00.00.0000",
+            "ijfiwjfwijf"
+        )
+        if (
+            setRequest.getNameRequest == "Добавить название заявки" ||
+            setRequest.getDepositRequest == -1 ||
+            setRequest.getServiceRequest == -1 ||
+            setRequest.getExecutorRequest == -1 ||
+            setRequest.getPriorityRequest == -1 ||
+            setRequest.getDateCreationRequest == "Не выбрано" ||
+            setRequest.getDateBegineRequest == "Не выбрано" ||
+            setRequest.getAuthorRequest == "Не выбрано"
+        ) {
+            Methods.callToast(this, "Неа")
+            return false
+        }
+        return true
     }
 }

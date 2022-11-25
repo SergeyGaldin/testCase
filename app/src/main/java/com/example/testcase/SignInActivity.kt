@@ -1,10 +1,8 @@
 package com.example.testcase
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -80,7 +78,6 @@ class SignInActivity : AppCompatActivity() {
                             jsonObject.getString("name_organization"),
                             jsonObject.getString("name_role")
                         )
-                        Log.d(TAG, "signIn: ${User.getRole}")
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     } else Methods.callSnackbar(view, JSONObject(it).getString("message"))

@@ -95,11 +95,12 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 val newList = ArrayList<Request>()
                 for (item in listRequest) {
-                    if (item.getNameRequest.contains(newText.toString())||
-                        item.getPriorityRequest.contains(newText.toString())||
-                        item.getStatusRequest.contains(newText.toString())||
-                        item.getDateRequest.contains(newText.toString())||
-                        item.getExecutorRequest.contains(newText.toString())) {
+                    if (item.getNameRequest.contains(newText.toString()) ||
+                        item.getPriorityRequest.contains(newText.toString()) ||
+                        item.getStatusRequest.contains(newText.toString()) ||
+                        item.getDateRequest.contains(newText.toString()) ||
+                        item.getExecutorRequest.contains(newText.toString())
+                    ) {
                         newList.add(
                             Request(
                                 item.getNameRequest,
