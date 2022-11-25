@@ -6,11 +6,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
 import com.example.testcase.constants.Constants
@@ -32,9 +36,9 @@ class AddRequestActivity : AppCompatActivity() {
     private lateinit var dateBegine: TextView
     private lateinit var author: TextView
     private lateinit var dateCreate: TextView
-    private lateinit var progressBar: ProgressBar
     private lateinit var content: RelativeLayout
-
+    private lateinit var progressBar: ProgressBar
+    private lateinit var recyclerView: RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_request)
@@ -59,7 +63,7 @@ class AddRequestActivity : AppCompatActivity() {
     private fun clicks() {
         findViewById<Button>(R.id.buttonCancel).setOnClickListener { onBackPressed() }
         findViewById<Button>(R.id.buttonSave).setOnClickListener { }
-        findViewById<Button>(R.id.buttonSelectingDeposit).setOnClickListener { }
+        findViewById<Button>(R.id.buttonSelectingDeposit).setOnClickListener { openAlertDialogDeposit() }
         nameRequest.setOnClickListener { openAlertDialogNameRequest() }
     }
 
@@ -81,6 +85,15 @@ class AddRequestActivity : AppCompatActivity() {
         alertDialog.show()
     }
 
+    private fun openAlertDialogDeposit() {
+        val viewAlert = returnView(R.layout.alert_dialog_recycler_view)
+        val alertDialog = returnAlertDialog(viewAlert)
+        val arrayList = ArrayList<String>()
+//        val arrayAdapter = ArrayAdapter(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, arrayList)
+//        recyclerView.adapter = arrayAdapter
+        alertDialog.show()
+    }
+
     private fun returnView(layout: Int): View {
         return layoutInflater.inflate(layout, null)
     }
@@ -88,6 +101,12 @@ class AddRequestActivity : AppCompatActivity() {
     private fun returnAlertDialog(view: View): AlertDialog {
         return AlertDialog.Builder(this, R.style.Theme_MyAlertDialog)
             .setView(view).setCancelable(true).create()
+    }
+
+    private fun initializeAdapter(view: View) {
+        recyclerView = view.findViewById(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
 
     @SuppressLint("SimpleDateFormat")
