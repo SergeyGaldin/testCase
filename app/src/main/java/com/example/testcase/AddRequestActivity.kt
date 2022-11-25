@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
@@ -17,10 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
+import com.example.testcase.adapters.DepositAdapter
+import com.example.testcase.adapters.ExecutorAdapter
+import com.example.testcase.adapters.PriorityAdapter
+import com.example.testcase.adapters.ServiceAdapter
 import com.example.testcase.constants.Constants
 import com.example.testcase.constants.Methods
-import com.example.testcase.models.Executor
-import com.example.testcase.models.User
+import com.example.testcase.models.*
 import com.google.android.material.textfield.TextInputEditText
 import org.json.JSONException
 import java.text.SimpleDateFormat
@@ -39,6 +41,11 @@ class AddRequestActivity : AppCompatActivity() {
     private lateinit var content: RelativeLayout
     private lateinit var progressBar: ProgressBar
     private lateinit var recyclerView: RecyclerView
+    private val listExecutor = ArrayList<Executor>()
+    private val listDeposit = ArrayList<Deposit>()
+    private val listService = ArrayList<Service>()
+    private val listPriority = ArrayList<Priority>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_request)
@@ -65,6 +72,25 @@ class AddRequestActivity : AppCompatActivity() {
         findViewById<Button>(R.id.buttonSave).setOnClickListener { }
         findViewById<Button>(R.id.buttonSelectingDeposit).setOnClickListener { openAlertDialogDeposit() }
         nameRequest.setOnClickListener { openAlertDialogNameRequest() }
+        service.setOnClickListener { openAlertDialogService() }
+        executor.setOnClickListener { openAlertDialogExecutor() }
+        priority.setOnClickListener { openAlertDialogPriority() }
+        dateBegine.setOnClickListener {  }
+    }
+
+    private fun returnView(layout: Int): View {
+        return layoutInflater.inflate(layout, null)
+    }
+
+    private fun returnAlertDialog(view: View): AlertDialog {
+        return AlertDialog.Builder(this, R.style.Theme_MyAlertDialog)
+            .setView(view).setCancelable(true).create()
+    }
+
+    private fun initializeRecyclerView(view: View) {
+        recyclerView = view.findViewById(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
 
     private fun openAlertDialogNameRequest() {
@@ -85,28 +111,53 @@ class AddRequestActivity : AppCompatActivity() {
         alertDialog.show()
     }
 
-    private fun openAlertDialogDeposit() {
+    private fun openAlertDialogExecutor() {
         val viewAlert = returnView(R.layout.alert_dialog_recycler_view)
         val alertDialog = returnAlertDialog(viewAlert)
-        val arrayList = ArrayList<String>()
-//        val arrayAdapter = ArrayAdapter(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, arrayList)
-//        recyclerView.adapter = arrayAdapter
+        initializeRecyclerView(viewAlert)
+        val itemOnClick: (Int) -> Unit = { position ->
+            executor.text = listExecutor[position].getNameExecutor
+            alertDialog.dismiss()
+        }
+        recyclerView.adapter = ExecutorAdapter(this, listExecutor, itemClickListener = itemOnClick)
         alertDialog.show()
     }
 
-    private fun returnView(layout: Int): View {
-        return layoutInflater.inflate(layout, null)
+    private fun openAlertDialogDeposit() {
+        val viewAlert = returnView(R.layout.alert_dialog_recycler_view)
+        val alertDialog = returnAlertDialog(viewAlert)
+        initializeRecyclerView(viewAlert)
+        val itemOnClick: (Int) -> Unit = { position ->
+            deposit.text = listDeposit[position].getDeposit
+            alertDialog.dismiss()
+        }
+        Log.d(TAG, "getDataPriority: ${listPriority.size}")
+        recyclerView.adapter = DepositAdapter(this, listDeposit, itemClickListener = itemOnClick)
+        alertDialog.show()
     }
 
-    private fun returnAlertDialog(view: View): AlertDialog {
-        return AlertDialog.Builder(this, R.style.Theme_MyAlertDialog)
-            .setView(view).setCancelable(true).create()
+    private fun openAlertDialogService() {
+        val viewAlert = returnView(R.layout.alert_dialog_recycler_view)
+        val alertDialog = returnAlertDialog(viewAlert)
+        initializeRecyclerView(viewAlert)
+        val itemOnClick: (Int) -> Unit = { position ->
+            service.text = listService[position].getService
+            alertDialog.dismiss()
+        }
+        recyclerView.adapter = ServiceAdapter(this, listService, itemClickListener = itemOnClick)
+        alertDialog.show()
     }
 
-    private fun initializeAdapter(view: View) {
-        recyclerView = view.findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+    private fun openAlertDialogPriority() {
+        val viewAlert = returnView(R.layout.alert_dialog_recycler_view)
+        val alertDialog = returnAlertDialog(viewAlert)
+        initializeRecyclerView(viewAlert)
+        val itemOnClick: (Int) -> Unit = { position ->
+            priority.text = listPriority[position].getPriority
+            alertDialog.dismiss()
+        }
+        recyclerView.adapter = PriorityAdapter(this, listPriority, itemClickListener = itemOnClick)
+        alertDialog.show()
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -118,9 +169,8 @@ class AddRequestActivity : AppCompatActivity() {
     private fun getDataDeposit() {
         val stringRequest = JsonArrayRequest(Constants.URL_GET_DATA_DEPOSIT, { response ->
             try {
-                val arrayList = ArrayList<String>()
                 for (i in 0 until response.length()) {
-                    arrayList.add(response.getJSONObject(i).getString("name_deposit"))
+                    listDeposit.add(Deposit(response.getJSONObject(i).getString("name_deposit")))
                 }
                 getDataService()
             } catch (e: JSONException) {
@@ -135,9 +185,8 @@ class AddRequestActivity : AppCompatActivity() {
     private fun getDataService() {
         val stringRequest = JsonArrayRequest(Constants.URL_GET_DATA_SERVICE, { response ->
             try {
-                val arrayList = ArrayList<String>()
                 for (i in 0 until response.length()) {
-                    arrayList.add(response.getJSONObject(i).getString("name_service"))
+                    listService.add(Service(response.getJSONObject(i).getString("name_service")))
                 }
                 getDataPriority()
             } catch (e: JSONException) {
@@ -152,9 +201,8 @@ class AddRequestActivity : AppCompatActivity() {
     private fun getDataPriority() {
         val stringRequest = JsonArrayRequest(Constants.URL_GET_DATA_PRIORITY, { response ->
             try {
-                val arrayList = ArrayList<String>()
                 for (i in 0 until response.length()) {
-                    arrayList.add(response.getJSONObject(i).getString("name_priority"))
+                    listPriority.add(Priority(response.getJSONObject(i).getString("name_priority")))
                 }
                 getDataExecutor()
             } catch (e: JSONException) {
@@ -169,10 +217,9 @@ class AddRequestActivity : AppCompatActivity() {
     private fun getDataExecutor() {
         val stringRequest = JsonArrayRequest(Constants.URL_GET_DATA_EXECUTOR, { response ->
             try {
-                val arrayList = ArrayList<Executor>()
                 for (i in 0 until response.length()) {
                     val objectRequest = response.getJSONObject(i)
-                    arrayList.add(
+                    listExecutor.add(
                         Executor(
                             objectRequest.getString("user_name"),
                             objectRequest.getString("name_organization")

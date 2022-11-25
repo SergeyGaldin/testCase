@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
@@ -96,7 +95,11 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 val newList = ArrayList<Request>()
                 for (item in listRequest) {
-                    if (item.getDateRequest.contains(newText.toString())) {
+                    if (item.getNameRequest.contains(newText.toString())||
+                        item.getPriorityRequest.contains(newText.toString())||
+                        item.getStatusRequest.contains(newText.toString())||
+                        item.getDateRequest.contains(newText.toString())||
+                        item.getExecutorRequest.contains(newText.toString())) {
                         newList.add(
                             Request(
                                 item.getNameRequest,
