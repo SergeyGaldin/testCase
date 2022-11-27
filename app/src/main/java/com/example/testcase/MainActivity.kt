@@ -35,14 +35,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         init()
         getDataRequest()
-        initializeAdapter()
     }
 
     private fun init() {
         setSupportActionBar(findViewById(R.id.toolbar))
         recyclerView = findViewById(R.id.recyclerView)
         progressBar = findViewById(R.id.progressBar)
-
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         findViewById<FloatingActionButton>(R.id.buttonAdd).setOnClickListener {
             startActivity(Intent(this, AddRequestActivity::class.java))
         }
@@ -50,8 +50,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun initializeAdapter() {
         adapter = RequestAdapter(this, listRequest)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         recyclerView.adapter = adapter
     }
 
@@ -62,13 +60,15 @@ class MainActivity : AppCompatActivity() {
                     val objectRequest = response.getJSONObject(i)
                     requestModel = Request(
                         objectRequest.getString("name_request"),
-                        objectRequest.getString("priority"),
-                        objectRequest.getString("status"),
+                        objectRequest.getString("name_priority"),
+                        objectRequest.getString("name_status"),
                         objectRequest.getString("date_begine"),
                         objectRequest.getString("author")
                     )
                     listRequest.add(requestModel)
+
                 }
+                initializeAdapter()
                 progressBar.visibility = View.GONE
             } catch (e: JSONException) {
                 Log.d(TAG, "getDataRequest: ${e.message}")
@@ -79,6 +79,16 @@ class MainActivity : AppCompatActivity() {
             progressBar.visibility = View.GONE
         }
         Volley.newRequestQueue(this).add(stringRequest)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.update -> {
+                listRequest.clear()
+                getDataRequest()
+            }
+        }
+        return true
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

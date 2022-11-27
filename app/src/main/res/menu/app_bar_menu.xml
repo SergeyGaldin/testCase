@@ -10,8 +10,8 @@
         app:showAsAction="ifRoom|collapseActionView" />
 
     <item
-        android:id="@+id/filter"
-        android:icon="@drawable/ic_filter"
+        android:id="@+id/update"
+        android:icon="@drawable/ic_update"
         android:title="@string/filter"
         app:showAsAction="always" />
 

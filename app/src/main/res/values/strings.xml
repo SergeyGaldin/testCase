@@ -23,5 +23,6 @@
     <string name="text_author">Автор</string>
 
     <string name="text_hint_name_request">Введите название заявки</string>
+    <string name="text_hint_custom_date">00.00.0000</string>
     <string name="ok">Ок</string>
 </resources>

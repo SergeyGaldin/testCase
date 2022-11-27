@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/invisible">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/background_alert_dialog_white"
+        android:paddingVertical="10dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputNameRequest"
+            app:counterEnabled="true"
+            app:counterMaxLength="10"
+            style="@style/OutlinedTextField">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textDateBeginRequest"
+                style="@style/TextInputEditText"
+                android:focusable="true"
+                android:maxLength="10"
+                android:hint="@string/text_hint_custom_date"
+                android:inputType="date" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/buttonOk"
+            style="@style/ButtonAlertDialog"
+            android:layout_below="@+id/inputNameRequest"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp"
+            android:text="@string/ok" />
+
+        <Button
+            android:id="@+id/buttonCancel"
+            style="@style/ButtonAlertDialog"
+            android:layout_below="@+id/inputNameRequest"
+            android:layout_marginEnd="20dp"
+            android:layout_toStartOf="@+id/buttonOk"
+            android:text="@string/cancel" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

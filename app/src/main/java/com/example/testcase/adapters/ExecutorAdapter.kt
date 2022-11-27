@@ -30,7 +30,7 @@ class ExecutorAdapter(
     override fun onBindViewHolder(holder: ExecutorAdapterVH, position: Int) {
         val executor: Executor = listExecutor[position]
         holder.nameExecutor.text = executor.getNameExecutor
-        holder.organizationExecutor.text = executor.getOrganizationExecutor
+        holder.roleExecutor.text = executor.getRoleExecutor
     }
 
     override fun getItemCount(): Int {
@@ -39,11 +39,11 @@ class ExecutorAdapter(
 
     inner class ExecutorAdapterVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var nameExecutor: TextView
-        var organizationExecutor: TextView
+        var roleExecutor: TextView
 
         init {
             nameExecutor = itemView.findViewById(R.id.name_executor)
-            organizationExecutor = itemView.findViewById(R.id.executor_organization)
+            roleExecutor = itemView.findViewById(R.id.executor_role)
             itemView.setOnClickListener { itemClickListener(adapterPosition) }
         }
     }

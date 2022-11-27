@@ -2,7 +2,6 @@ package com.example.testcase
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -62,6 +61,7 @@ class AddRequestActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_request)
         init()
+        setValueFields()
         clicks()
         getDataDeposit()
     }
@@ -88,7 +88,7 @@ class AddRequestActivity : AppCompatActivity() {
         service.setOnClickListener { openAlertDialogService() }
         executor.setOnClickListener { openAlertDialogExecutor() }
         priority.setOnClickListener { openAlertDialogPriority() }
-        dateBegine.setOnClickListener { }
+        dateBegine.setOnClickListener { openAlertDialogDateBeginRequest() }
     }
 
     private fun returnView(layout: Int): View {
@@ -124,13 +124,31 @@ class AddRequestActivity : AppCompatActivity() {
         alertDialog.show()
     }
 
+    private fun openAlertDialogDateBeginRequest() {
+        val viewAlert = returnView(R.layout.alert_dialog_date_begin)
+        val alertDialog = returnAlertDialog(viewAlert)
+        viewAlert.findViewById<Button>(R.id.buttonCancel)
+            .setOnClickListener { alertDialog.dismiss() }
+        viewAlert.findViewById<Button>(R.id.buttonOk).setOnClickListener {
+            val stringDateBeginRequest =
+                viewAlert.findViewById<TextInputEditText>(R.id.textDateBeginRequest).text.toString()
+            if (stringDateBeginRequest.isNotEmpty()) {
+                dateBegine.text = stringDateBeginRequest
+                alertDialog.dismiss()
+            } else {
+                Methods.callToast(application, "Заполните поле плановая дата")
+            }
+        }
+        alertDialog.show()
+    }
+
     private fun openAlertDialogExecutor() {
         val viewAlert = returnView(R.layout.alert_dialog_recycler_view)
         val alertDialog = returnAlertDialog(viewAlert)
         initializeRecyclerView(viewAlert)
         val itemOnClick: (Int) -> Unit = { position ->
             executor.text = listExecutor[position].getNameExecutor
-            idExecutor = position + 1
+            idExecutor = listExecutor[position].getIdExecutor.toInt()
             alertDialog.dismiss()
         }
         recyclerView.adapter = ExecutorAdapter(this, listExecutor, itemClickListener = itemOnClick)
@@ -177,10 +195,10 @@ class AddRequestActivity : AppCompatActivity() {
         alertDialog.show()
     }
 
-    @SuppressLint("SimpleDateFormat")
+    @SuppressLint("SimpleDateFormat", "SetTextI18n")
     private fun setValueFields() {
         dateCreate.text = SimpleDateFormat("dd.MM.yyyy HH:mm").format(Date())
-        author.text = User.getUserName
+        author.text = User.getUserName + " / " + User.getOrganization
     }
 
     private fun getDataDeposit() {
@@ -238,8 +256,9 @@ class AddRequestActivity : AppCompatActivity() {
                     val objectRequest = response.getJSONObject(i)
                     listExecutor.add(
                         Executor(
+                            objectRequest.getString("id"),
                             objectRequest.getString("user_name"),
-                            objectRequest.getString("name_organization")
+                            objectRequest.getString("name_role")
                         )
                     )
                 }
@@ -256,19 +275,18 @@ class AddRequestActivity : AppCompatActivity() {
 
     private fun setDataRequest(view: View, button: Button) {
         if (checkSetData()) {
-            button.isClickable = false
-            progressBar.visibility = View.VISIBLE
-            val stringRequest =
-                object : StringRequest(Method.POST, Constants.URL_SET_DATA_REQUEST, Response.Listener {
+            val stringRequest = object :
+                StringRequest(Method.POST, Constants.URL_SET_DATA_REQUEST, Response.Listener {
                     progressBar.visibility = View.GONE
                     button.isClickable = true
                     try {
-                        if (!JSONObject(it).getBoolean("error")) {
-                            val jsonObject = JSONObject(it)
-                            Log.d(TAG, "setDataRequest")
-//                            startActivity(Intent(this, MainActivity::class.java))
-//                            finish()
-                        } else Methods.callSnackbar(view, JSONObject(it).getString("message"))
+                        val jsonObject = JSONObject(it)
+                        if (!jsonObject.getBoolean("error")) {
+                            onBackPressed()
+                            finish()
+                        } else {
+                            Methods.callSnackbar(view, jsonObject.getString("message"))
+                        }
                     } catch (e: JSONException) {
                         Methods.callSnackbar(view, e.message.toString())
                     }
@@ -277,20 +295,20 @@ class AddRequestActivity : AppCompatActivity() {
                     button.isClickable = true
                     if (it?.message != null) Methods.callSnackbar(view, it.message!!)
                 }) {
-                    @Throws(AuthFailureError::class)
-                    override fun getParams(): MutableMap<String, String> {
-                        val params: MutableMap<String, String> = HashMap()
-                        params["name_request"] = setRequest.getNameRequest
-                        params["deposit"] = setRequest.getDepositRequest.toString()
-                        params["service"] = setRequest.getServiceRequest.toString()
-                        params["executor"] = setRequest.getExecutorRequest.toString()
-                        params["priority"] = setRequest.getPriorityRequest.toString()
-                        params["date_creation"] = setRequest.getDateCreationRequest
-                        params["date_begine"] = setRequest.getDateBegineRequest
-                        params["author"] = setRequest.getAuthorRequest
-                        return params
-                    }
+                @Throws(AuthFailureError::class)
+                override fun getParams(): MutableMap<String, String> {
+                    val params: MutableMap<String, String> = HashMap()
+                    params["name_request"] = setRequest.getNameRequest
+                    params["deposit"] = setRequest.getDepositRequest.toString()
+                    params["service"] = setRequest.getServiceRequest.toString()
+                    params["executor"] = setRequest.getExecutorRequest.toString()
+                    params["priority"] = setRequest.getPriorityRequest.toString()
+                    params["date_creation"] = setRequest.getDateCreationRequest
+                    params["date_begine"] = setRequest.getDateBegineRequest
+                    params["author"] = setRequest.getAuthorRequest
+                    return params
                 }
+            }
             Volley.newRequestQueue(this).add(stringRequest)
         }
     }
@@ -302,12 +320,9 @@ class AddRequestActivity : AppCompatActivity() {
             idService,
             idExecutor,
             idPriority,
-//            author.text.toString()
-//            dateCreate.text.toString(),
-//            dateBegine.text.toString(),
-            "11.11.1111",
-            "00.00.0000",
-            "ijfiwjfwijf"
+            dateCreate.text.toString(),
+            dateBegine.text.toString(),
+            author.text.toString()
         )
         if (
             setRequest.getNameRequest == "Добавить название заявки" ||
@@ -319,7 +334,7 @@ class AddRequestActivity : AppCompatActivity() {
             setRequest.getDateBegineRequest == "Не выбрано" ||
             setRequest.getAuthorRequest == "Не выбрано"
         ) {
-            Methods.callToast(this, "Неа")
+            Methods.callToast(this, "Заполните все поля")
             return false
         }
         return true
