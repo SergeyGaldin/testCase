@@ -15,17 +15,17 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputNameRequest"
+            style="@style/OutlinedTextField"
             app:counterEnabled="true"
-            app:counterMaxLength="10"
-            style="@style/OutlinedTextField">
+            app:counterMaxLength="10">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/textDateBeginRequest"
                 style="@style/TextInputEditText"
                 android:focusable="true"
-                android:maxLength="10"
                 android:hint="@string/text_hint_custom_date"
-                android:inputType="date" />
+                android:inputType="date"
+                android:maxLength="10" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
