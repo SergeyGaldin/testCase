@@ -49,7 +49,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeAdapter() {
-        adapter = RequestAdapter(this, listRequest)
+        val itemOnClick: (Int) -> Unit = { position ->
+            startActivity(
+                Intent(this, ChangeDataRequestActivity::class.java)
+                    .putExtra("name", listRequest[position].getNameRequest)
+            )
+        }
+        adapter = RequestAdapter(this, listRequest, itemClickListener = itemOnClick)
         recyclerView.adapter = adapter
     }
 
@@ -66,7 +72,6 @@ class MainActivity : AppCompatActivity() {
                         objectRequest.getString("author")
                     )
                     listRequest.add(requestModel)
-
                 }
                 initializeAdapter()
                 progressBar.visibility = View.GONE
@@ -122,7 +127,13 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
                 }
-                adapter = RequestAdapter(applicationContext, newList)
+                val itemOnClick: (Int) -> Unit = { position ->
+                    startActivity(
+                        Intent(applicationContext, ChangeDataRequestActivity::class.java)
+                            .putExtra("name", listRequest[position].getNameRequest)
+                    )
+                }
+                adapter = RequestAdapter(applicationContext, newList, itemOnClick)
                 recyclerView.adapter = adapter
                 return true
             }

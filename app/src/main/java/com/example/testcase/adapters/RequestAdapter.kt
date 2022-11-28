@@ -9,7 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.testcase.R
 import com.example.testcase.models.Request
 
-class RequestAdapter(context: Context, listRequest: ArrayList<Request>) :
+class RequestAdapter(
+    context: Context,
+    listRequest: ArrayList<Request>,
+    private val itemClickListener: (Int) -> Unit
+) :
     RecyclerView.Adapter<RequestAdapter.RequestAdapterVH>() {
     private var layoutInflater: LayoutInflater
     private var listRequest: List<Request>
@@ -36,7 +40,7 @@ class RequestAdapter(context: Context, listRequest: ArrayList<Request>) :
         return listRequest.size
     }
 
-    class RequestAdapterVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class RequestAdapterVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var nameRequest: TextView
         var priorityRequest: TextView
         var statusRequest: TextView
@@ -49,6 +53,7 @@ class RequestAdapter(context: Context, listRequest: ArrayList<Request>) :
             statusRequest = itemView.findViewById(R.id.status)
             dateRequest = itemView.findViewById(R.id.date)
             executorRequest = itemView.findViewById(R.id.executor)
+            itemView.setOnClickListener { itemClickListener(adapterPosition) }
         }
     }
 }
