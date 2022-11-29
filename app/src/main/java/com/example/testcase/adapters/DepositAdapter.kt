@@ -40,7 +40,7 @@ class DepositAdapter(
         var deposit: TextView
 
         init {
-            deposit = itemView.findViewById(R.id.name_deposit)
+            deposit = itemView.findViewById(R.id.nameDeposit)
             itemView.setOnClickListener { itemClickListener(adapterPosition) }
         }
     }

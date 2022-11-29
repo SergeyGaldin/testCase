@@ -4,8 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.ProgressBar
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -14,8 +12,6 @@ import com.example.testcase.constants.Constants
 import com.example.testcase.constants.Methods
 import com.example.testcase.databinding.ActivitySignInBinding
 import com.example.testcase.models.User
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import org.json.JSONException
 import org.json.JSONObject
 import kotlin.jvm.Throws
@@ -38,11 +34,11 @@ class SignInActivity : AppCompatActivity() {
         binding.inputLogin.error = null
         binding.inputPassword.error = null
         User.setData(binding.textLogin.text.toString(), binding.textPassword.text.toString())
-        if (User.getLogin.isEmpty()) {
+        if (User.getLogin?.isEmpty() == true) {
             binding.inputLogin.error = "Поле пустое"
             return false
         }
-        if (User.getPassword.isEmpty()) {
+        if (User.getPassword?.isEmpty() == true) {
             binding.inputPassword.error = "Поле пустое"
             return false
         }
@@ -79,8 +75,8 @@ class SignInActivity : AppCompatActivity() {
                 @Throws(AuthFailureError::class)
                 override fun getParams(): MutableMap<String, String> {
                     val params: MutableMap<String, String> = HashMap()
-                    params["login"] = User.getLogin
-                    params["password"] = User.getPassword
+                    params["login"] = User.getLogin.toString()
+                    params["password"] = User.getPassword.toString()
                     return params
                 }
             }

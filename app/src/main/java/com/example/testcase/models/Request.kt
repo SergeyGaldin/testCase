@@ -1,30 +1,24 @@
 package com.example.testcase.models
 
 class Request(
-    nameRequest: String,
-    priorityRequest: String,
-    statusRequest: String,
-    dateRequest: String,
-    executorRequest: String
+    private var nameRequest: String,
+    private var priorityRequest: String,
+    private var statusRequest: String,
+    private var dateRequest: String,
+    private var executorRequest: String
 ) {
-    private var nameRequests: String = nameRequest
-    private var priorityRequests: String = priorityRequest
-    private var statusRequests: String = statusRequest
-    private var dateRequests: String = dateRequest
-    private var executorRequests: String = executorRequest
-
     val getNameRequest: String
-        get() = nameRequests
+        get() = nameRequest
 
     val getPriorityRequest: String
-        get() = priorityRequests
+        get() = priorityRequest
 
     val getStatusRequest: String
-        get() = statusRequests
+        get() = statusRequest
 
     val getDateRequest: String
-        get() = dateRequests
+        get() = dateRequest
 
     val getExecutorRequest: String
-        get() = executorRequests
+        get() = executorRequest
 }

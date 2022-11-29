@@ -40,7 +40,7 @@ class ServiceAdapter(
         var service: TextView
 
         init {
-            service = itemView.findViewById(R.id.name_service)
+            service = itemView.findViewById(R.id.nameService)
             itemView.setOnClickListener { itemClickListener(adapterPosition) }
         }
     }

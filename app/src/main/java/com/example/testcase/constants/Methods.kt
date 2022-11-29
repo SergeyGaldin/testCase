@@ -13,8 +13,4 @@ object Methods {
     fun callToast(context: Context, message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
-
-    fun replaceFragment() {
-
-    }
 }

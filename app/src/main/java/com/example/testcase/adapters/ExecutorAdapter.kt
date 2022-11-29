@@ -42,8 +42,8 @@ class ExecutorAdapter(
         var roleExecutor: TextView
 
         init {
-            nameExecutor = itemView.findViewById(R.id.name_executor)
-            roleExecutor = itemView.findViewById(R.id.executor_role)
+            nameExecutor = itemView.findViewById(R.id.nameExecutor)
+            roleExecutor = itemView.findViewById(R.id.executorRole)
             itemView.setOnClickListener { itemClickListener(adapterPosition) }
         }
     }

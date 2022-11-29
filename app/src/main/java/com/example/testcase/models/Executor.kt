@@ -1,6 +1,10 @@
 package com.example.testcase.models
 
-class Executor(private var idExecutor: String,private var nameExecutor: String, private var roleExecutor: String) {
+class Executor(
+    private var idExecutor: String,
+    private var nameExecutor: String,
+    private var roleExecutor: String
+) {
     val getIdExecutor: String
         get() = idExecutor
 

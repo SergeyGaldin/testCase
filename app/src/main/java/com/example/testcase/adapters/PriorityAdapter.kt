@@ -40,7 +40,7 @@ class PriorityAdapter(
         var priority: TextView
 
         init {
-            priority = itemView.findViewById(R.id.name_priority)
+            priority = itemView.findViewById(R.id.namePriority)
             itemView.setOnClickListener { itemClickListener(adapterPosition) }
         }
     }

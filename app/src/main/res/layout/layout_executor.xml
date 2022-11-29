@@ -9,17 +9,17 @@
         android:layout_margin="10dp">
 
         <TextView
-            android:id="@+id/name_executor"
+            android:id="@+id/nameExecutor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/executor_role"
+            android:id="@+id/executorRole"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/name_executor"
+            android:layout_below="@id/nameExecutor"
             android:layout_marginTop="5dp"
             android:textColor="@color/black"
             android:textSize="18sp" />

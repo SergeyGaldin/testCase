@@ -1,43 +1,61 @@
 package com.example.testcase
 
+import android.app.SearchManager
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.testcase.databinding.ActivityMainBinding
+import com.example.testcase.fragments.ListRequestsFragment
+import com.example.testcase.interfaces.ReplaceFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ReplaceFragment {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var mSearchView: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        init()
     }
 
+    private fun init() {
+        setSupportActionBar(binding.toolbar)
+        replace(ListRequestsFragment(), false)
+    }
 
+    override fun replace(fragment: Fragment, boolean: Boolean) {
+        if (boolean) supportFragmentManager.beginTransaction().replace(R.id.frameContent, fragment)
+            .addToBackStack("stack").commit()
+        else supportFragmentManager.beginTransaction().replace(R.id.frameContent, fragment).commit()
+    }
 
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.update -> {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.update -> {
 //                listRequest.clear()
 //                getDataRequest()
-//            }
-//        }
-//        return true
-//    }
-//
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        menuInflater.inflate(R.menu.app_bar_menu, menu)
-//        val mSearch: MenuItem = menu.findItem(R.id.search)
-//        mSearchView = mSearch.actionView as SearchView
-//        mSearchView.isIconifiedByDefault = false
-//        mSearchView.queryHint = "Поиск"
-//        mSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                return false
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
+            }
+        }
+        return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.app_bar_menu, menu)
+        val mSearch: MenuItem = menu.findItem(R.id.search)
+        mSearchView = mSearch.actionView as SearchView
+        mSearchView.isIconifiedByDefault = false
+        mSearchView.queryHint = "Поиск"
+        mSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
 //                val newList = ArrayList<Request>()
 //                for (item in listRequest) {
 //                    if (item.getNameRequest.contains(newText.toString()) ||
@@ -65,18 +83,18 @@ class MainActivity : AppCompatActivity() {
 //                }
 //                adapter = RequestAdapter(applicationContext, newList, itemOnClick)
 //                recyclerView.adapter = adapter
-//                return true
-//            }
-//        })
-//        return super.onCreateOptionsMenu(menu)
-//    }
-//
-//    override fun onNewIntent(intent: Intent) {
-//        super.onNewIntent(intent)
-//        if (Intent.ACTION_SEARCH == intent.action) {
-//            val query = intent.getStringExtra(SearchManager.QUERY)
-//            mSearchView.setQuery(query.toString(), false)
-//            mSearchView.requestFocus()
-//        }
-//    }
+                return true
+            }
+        })
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        if (Intent.ACTION_SEARCH == intent.action) {
+            val query = intent.getStringExtra(SearchManager.QUERY)
+            mSearchView.setQuery(query.toString(), false)
+            mSearchView.requestFocus()
+        }
+    }
 }

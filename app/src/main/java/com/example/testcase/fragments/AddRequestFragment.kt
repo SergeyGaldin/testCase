@@ -1,15 +1,14 @@
-package com.example.testcase
+package com.example.testcase.fragments
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
-import androidx.appcompat.app.AppCompatActivity
+import android.content.ContentValues
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,12 +18,14 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.testcase.R
 import com.example.testcase.adapters.DepositAdapter
 import com.example.testcase.adapters.ExecutorAdapter
 import com.example.testcase.adapters.PriorityAdapter
 import com.example.testcase.adapters.ServiceAdapter
 import com.example.testcase.constants.Constants
 import com.example.testcase.constants.Methods
+import com.example.testcase.databinding.FragmentAddRequestBinding
 import com.example.testcase.models.*
 import com.google.android.material.textfield.TextInputEditText
 import org.json.JSONException
@@ -34,20 +35,10 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.jvm.Throws
 
-class AddRequestActivity : AppCompatActivity() {
-    private lateinit var nameRequest: TextView
-    private lateinit var deposit: TextView
-    private lateinit var service: TextView
-    private lateinit var executor: TextView
-    private lateinit var priority: TextView
-    private lateinit var dateBegine: TextView
-    private lateinit var author: TextView
-    private lateinit var dateCreate: TextView
-    private lateinit var content: RelativeLayout
-    private lateinit var buttonSave: Button
-    private lateinit var progressBar: ProgressBar
-    private lateinit var recyclerView: RecyclerView
+class AddRequestFragment : Fragment() {
+    private lateinit var binding: FragmentAddRequestBinding
     private lateinit var setRequest: SetRequest
+    private lateinit var recyclerView: RecyclerView
     private val listExecutor = ArrayList<Executor>()
     private val listDeposit = ArrayList<Deposit>()
     private val listService = ArrayList<Service>()
@@ -57,38 +48,25 @@ class AddRequestActivity : AppCompatActivity() {
     private var idExecutor = -1
     private var idPriority = -1
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_request)
-        init()
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentAddRequestBinding.inflate(inflater)
         setValueFields()
         clicks()
         getDataDeposit()
-    }
-
-    private fun init() {
-        nameRequest = findViewById(R.id.nameRequest)
-        deposit = findViewById(R.id.deposit)
-        service = findViewById(R.id.service)
-        executor = findViewById(R.id.executor)
-        priority = findViewById(R.id.priority)
-        dateBegine = findViewById(R.id.date_begine)
-        author = findViewById(R.id.author)
-        dateCreate = findViewById(R.id.date_create)
-        buttonSave = findViewById(R.id.buttonSave)
-        progressBar = findViewById(R.id.progressBar)
-        content = findViewById(R.id.content)
+        return binding.root
     }
 
     private fun clicks() {
-        buttonSave.setOnClickListener { setDataRequest(it, buttonSave) }
-        findViewById<Button>(R.id.buttonCancel).setOnClickListener { onBackPressed() }
-        findViewById<Button>(R.id.buttonSelectingDeposit).setOnClickListener { openAlertDialogDeposit() }
-        nameRequest.setOnClickListener { openAlertDialogNameRequest() }
-        service.setOnClickListener { openAlertDialogService() }
-        executor.setOnClickListener { openAlertDialogExecutor() }
-        priority.setOnClickListener { openAlertDialogPriority() }
-        dateBegine.setOnClickListener { openAlertDialogDateBeginRequest() }
+        binding.buttonSave.setOnClickListener { setDataRequest(it, binding.buttonSave) }
+        binding.buttonCancel.setOnClickListener { activity?.onBackPressed() }
+        binding.buttonSelectingDeposit.setOnClickListener { openAlertDialogDeposit() }
+        binding.nameRequest.setOnClickListener { openAlertDialogNameRequest() }
+        binding.service.setOnClickListener { openAlertDialogService() }
+        binding.executor.setOnClickListener { openAlertDialogExecutor() }
+        binding.priority.setOnClickListener { openAlertDialogPriority() }
+        binding.dateBegine.setOnClickListener { openAlertDialogDateBeginRequest() }
     }
 
     private fun returnView(layout: Int): View {
@@ -96,14 +74,19 @@ class AddRequestActivity : AppCompatActivity() {
     }
 
     private fun returnAlertDialog(view: View): AlertDialog {
-        return AlertDialog.Builder(this, R.style.Theme_MyAlertDialog)
+        return AlertDialog.Builder(requireContext(), R.style.Theme_MyAlertDialog)
             .setView(view).setCancelable(true).create()
     }
 
     private fun initializeRecyclerView(view: View) {
         recyclerView = view.findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                requireContext(),
+                DividerItemDecoration.VERTICAL
+            )
+        )
     }
 
     private fun openAlertDialogNameRequest() {
@@ -115,10 +98,10 @@ class AddRequestActivity : AppCompatActivity() {
             val stringNameRequest =
                 viewAlert.findViewById<TextInputEditText>(R.id.textNameRequest).text.toString()
             if (stringNameRequest.isNotEmpty()) {
-                nameRequest.text = stringNameRequest
+                binding.nameRequest.text = stringNameRequest
                 alertDialog.dismiss()
             } else {
-                Methods.callToast(application, "Заполните поле название заявки")
+                Methods.callToast(requireContext(), "Заполните поле название заявки")
             }
         }
         alertDialog.show()
@@ -133,10 +116,10 @@ class AddRequestActivity : AppCompatActivity() {
             val stringDateBeginRequest =
                 viewAlert.findViewById<TextInputEditText>(R.id.textDateBeginRequest).text.toString()
             if (stringDateBeginRequest.isNotEmpty()) {
-                dateBegine.text = stringDateBeginRequest
+                binding.dateBegine.text = stringDateBeginRequest
                 alertDialog.dismiss()
             } else {
-                Methods.callToast(application, "Заполните поле плановая дата")
+                Methods.callToast(requireContext(), "Заполните поле плановая дата")
             }
         }
         alertDialog.show()
@@ -147,11 +130,12 @@ class AddRequestActivity : AppCompatActivity() {
         val alertDialog = returnAlertDialog(viewAlert)
         initializeRecyclerView(viewAlert)
         val itemOnClick: (Int) -> Unit = { position ->
-            executor.text = listExecutor[position].getNameExecutor
+            binding.executor.text = listExecutor[position].getNameExecutor
             idExecutor = listExecutor[position].getIdExecutor.toInt()
             alertDialog.dismiss()
         }
-        recyclerView.adapter = ExecutorAdapter(this, listExecutor, itemClickListener = itemOnClick)
+        recyclerView.adapter =
+            ExecutorAdapter(requireContext(), listExecutor, itemClickListener = itemOnClick)
         alertDialog.show()
     }
 
@@ -160,12 +144,13 @@ class AddRequestActivity : AppCompatActivity() {
         val alertDialog = returnAlertDialog(viewAlert)
         initializeRecyclerView(viewAlert)
         val itemOnClick: (Int) -> Unit = { position ->
-            deposit.text = listDeposit[position].getDeposit
+            binding.deposit.text = listDeposit[position].getDeposit
             idDeposit = position + 1
             alertDialog.dismiss()
         }
-        Log.d(TAG, "getDataPriority: ${listPriority.size}")
-        recyclerView.adapter = DepositAdapter(this, listDeposit, itemClickListener = itemOnClick)
+        Log.d(ContentValues.TAG, "getDataPriority: ${listPriority.size}")
+        recyclerView.adapter =
+            DepositAdapter(requireContext(), listDeposit, itemClickListener = itemOnClick)
         alertDialog.show()
     }
 
@@ -174,11 +159,12 @@ class AddRequestActivity : AppCompatActivity() {
         val alertDialog = returnAlertDialog(viewAlert)
         initializeRecyclerView(viewAlert)
         val itemOnClick: (Int) -> Unit = { position ->
-            service.text = listService[position].getService
+            binding.service.text = listService[position].getService
             idService = position + 1
             alertDialog.dismiss()
         }
-        recyclerView.adapter = ServiceAdapter(this, listService, itemClickListener = itemOnClick)
+        recyclerView.adapter =
+            ServiceAdapter(requireContext(), listService, itemClickListener = itemOnClick)
         alertDialog.show()
     }
 
@@ -187,18 +173,19 @@ class AddRequestActivity : AppCompatActivity() {
         val alertDialog = returnAlertDialog(viewAlert)
         initializeRecyclerView(viewAlert)
         val itemOnClick: (Int) -> Unit = { position ->
-            priority.text = listPriority[position].getPriority
+            binding.priority.text = listPriority[position].getPriority
             idPriority = position + 1
             alertDialog.dismiss()
         }
-        recyclerView.adapter = PriorityAdapter(this, listPriority, itemClickListener = itemOnClick)
+        recyclerView.adapter =
+            PriorityAdapter(requireContext(), listPriority, itemClickListener = itemOnClick)
         alertDialog.show()
     }
 
     @SuppressLint("SimpleDateFormat", "SetTextI18n")
     private fun setValueFields() {
-        dateCreate.text = SimpleDateFormat("dd.MM.yyyy HH:mm").format(Date())
-        author.text = User.getUserName + " / " + User.getOrganization
+        binding.dateCreate.text = SimpleDateFormat("dd.MM.yyyy HH:mm").format(Date())
+        binding.author.text = User.getUserName + " / " + User.getOrganization
     }
 
     private fun getDataDeposit() {
@@ -209,12 +196,12 @@ class AddRequestActivity : AppCompatActivity() {
                 }
                 getDataService()
             } catch (e: JSONException) {
-                Log.d(TAG, "getDataDeposit: ${e.message}")
+                Log.d(ContentValues.TAG, "getDataDeposit: ${e.message}")
             }
         }) { error ->
-            Log.d(TAG, "getDataDeposit: ${error.message}")
+            Log.d(ContentValues.TAG, "getDataDeposit: ${error.message}")
         }
-        Volley.newRequestQueue(this).add(stringRequest)
+        Volley.newRequestQueue(context).add(stringRequest)
     }
 
     private fun getDataService() {
@@ -225,12 +212,12 @@ class AddRequestActivity : AppCompatActivity() {
                 }
                 getDataPriority()
             } catch (e: JSONException) {
-                Log.d(TAG, "getDataService: ${e.message}")
+                Log.d(ContentValues.TAG, "getDataService: ${e.message}")
             }
         }) { error ->
-            Log.d(TAG, "getDataService: ${error.message}")
+            Log.d(ContentValues.TAG, "getDataService: ${error.message}")
         }
-        Volley.newRequestQueue(this).add(stringRequest)
+        Volley.newRequestQueue(context).add(stringRequest)
     }
 
     private fun getDataPriority() {
@@ -241,12 +228,12 @@ class AddRequestActivity : AppCompatActivity() {
                 }
                 getDataExecutor()
             } catch (e: JSONException) {
-                Log.d(TAG, "getDataPriority: ${e.message}")
+                Log.d(ContentValues.TAG, "getDataPriority: ${e.message}")
             }
         }) { error ->
-            Log.d(TAG, "getDataPriority: ${error.message}")
+            Log.d(ContentValues.TAG, "getDataPriority: ${error.message}")
         }
-        Volley.newRequestQueue(this).add(stringRequest)
+        Volley.newRequestQueue(context).add(stringRequest)
     }
 
     private fun getDataExecutor() {
@@ -262,28 +249,27 @@ class AddRequestActivity : AppCompatActivity() {
                         )
                     )
                 }
-                content.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
+                binding.content.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.GONE
             } catch (e: JSONException) {
-                Log.d(TAG, "getDataExecutor: ${e.message}")
+                Log.d(ContentValues.TAG, "getDataExecutor: ${e.message}")
             }
         }) { error ->
-            Log.d(TAG, "getDataExecutor: ${error.message}")
+            Log.d(ContentValues.TAG, "getDataExecutor: ${error.message}")
         }
-        Volley.newRequestQueue(this).add(stringRequest)
+        Volley.newRequestQueue(context).add(stringRequest)
     }
 
     private fun setDataRequest(view: View, button: Button) {
         if (checkSetData()) {
             val stringRequest = object :
                 StringRequest(Method.POST, Constants.URL_SET_DATA_REQUEST, Response.Listener {
-                    progressBar.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
                     button.isClickable = true
                     try {
                         val jsonObject = JSONObject(it)
                         if (!jsonObject.getBoolean("error")) {
-                            onBackPressed()
-                            finish()
+                            activity?.onBackPressed()
                         } else {
                             Methods.callSnackbar(view, jsonObject.getString("message"))
                         }
@@ -291,7 +277,7 @@ class AddRequestActivity : AppCompatActivity() {
                         Methods.callSnackbar(view, e.message.toString())
                     }
                 }, Response.ErrorListener {
-                    progressBar.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
                     button.isClickable = true
                     if (it?.message != null) Methods.callSnackbar(view, it.message!!)
                 }) {
@@ -309,20 +295,20 @@ class AddRequestActivity : AppCompatActivity() {
                     return params
                 }
             }
-            Volley.newRequestQueue(this).add(stringRequest)
+            Volley.newRequestQueue(context).add(stringRequest)
         }
     }
 
     private fun checkSetData(): Boolean {
         setRequest = SetRequest(
-            nameRequest.text.toString(),
+            binding.nameRequest.text.toString(),
             idDeposit,
             idService,
             idExecutor,
             idPriority,
-            dateCreate.text.toString(),
-            dateBegine.text.toString(),
-            author.text.toString()
+            binding.dateCreate.text.toString(),
+            binding.dateBegine.text.toString(),
+            binding.author.text.toString()
         )
         if (
             setRequest.getNameRequest == "Добавить название заявки" ||
@@ -334,9 +320,10 @@ class AddRequestActivity : AppCompatActivity() {
             setRequest.getDateBegineRequest == "Не выбрано" ||
             setRequest.getAuthorRequest == "Не выбрано"
         ) {
-            Methods.callToast(this, "Заполните все поля")
+            Methods.callToast(requireContext(), "Заполните все поля")
             return false
         }
         return true
     }
+
 }
