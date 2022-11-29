@@ -12,6 +12,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.testcase.constants.Constants
 import com.example.testcase.constants.Methods
+import com.example.testcase.databinding.ActivitySignInBinding
 import com.example.testcase.models.User
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -20,43 +21,29 @@ import org.json.JSONObject
 import kotlin.jvm.Throws
 
 class SignInActivity : AppCompatActivity() {
-    private lateinit var inputLogin: TextInputLayout
-    private lateinit var inputPassword: TextInputLayout
-    private lateinit var textLogin: TextInputEditText
-    private lateinit var textPassword: TextInputEditText
-    private lateinit var buttonSignIn: Button
-    private lateinit var progressBar: ProgressBar
+    private lateinit var binding: ActivitySignInBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_in)
-        init()
+        binding = ActivitySignInBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        buttonSignIn.setOnClickListener {
+        binding.buttonSignIn.setOnClickListener {
             if (validation()) signIn(it)
         }
     }
 
-    private fun init() {
-        inputLogin = findViewById(R.id.inputLogin)
-        inputPassword = findViewById(R.id.inputPassword)
-        textLogin = findViewById(R.id.textLogin)
-        textPassword = findViewById(R.id.textPassword)
-        buttonSignIn = findViewById(R.id.buttonSignIn)
-        progressBar = findViewById(R.id.progressBar)
-    }
-
     //  Проверка заполнености полей
     private fun validation(): Boolean {
-        inputLogin.error = null
-        inputPassword.error = null
-        User.setData(textLogin.text.toString(), textPassword.text.toString())
+        binding.inputLogin.error = null
+        binding.inputPassword.error = null
+        User.setData(binding.textLogin.text.toString(), binding.textPassword.text.toString())
         if (User.getLogin.isEmpty()) {
-            inputLogin.error = "Поле пустое"
+            binding.inputLogin.error = "Поле пустое"
             return false
         }
         if (User.getPassword.isEmpty()) {
-            inputPassword.error = "Поле пустое"
+            binding.inputPassword.error = "Поле пустое"
             return false
         }
         return true
@@ -64,12 +51,12 @@ class SignInActivity : AppCompatActivity() {
 
     //  Авторизация
     private fun signIn(view: View) {
-        buttonSignIn.isClickable = false
-        progressBar.visibility = View.VISIBLE
+        binding.buttonSignIn.isClickable = false
+        binding.progressBar.visibility = View.VISIBLE
         val stringRequest =
             object : StringRequest(Method.POST, Constants.URL_LOGIN, Response.Listener {
-                progressBar.visibility = View.GONE
-                buttonSignIn.isClickable = true
+                binding.progressBar.visibility = View.GONE
+                binding.buttonSignIn.isClickable = true
                 try {
                     if (!JSONObject(it).getBoolean("error")) {
                         val jsonObject = JSONObject(it)
@@ -85,8 +72,8 @@ class SignInActivity : AppCompatActivity() {
                     Methods.callSnackbar(view, e.message.toString())
                 }
             }, Response.ErrorListener {
-                progressBar.visibility = View.GONE
-                buttonSignIn.isClickable = true
+                binding.progressBar.visibility = View.GONE
+                binding.buttonSignIn.isClickable = true
                 if (it?.message != null) Methods.callSnackbar(view, it.message!!)
             }) {
                 @Throws(AuthFailureError::class)

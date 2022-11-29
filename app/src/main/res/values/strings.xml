@@ -16,13 +16,17 @@
     <string name="not_chosen">Не выбрано</string>
     <string name="selecting_deposit">Выбрать месторождение</string>
     <string name="text_service">Сервис</string>
+    <string name="text_status">Статус</string>
     <string name="text_executor">Исполнитель</string>
     <string name="text_priority">Приоритет</string>
     <string name="text_date_begine">Плановая дата</string>
+    <string name="text_date_end">Дата закрытия</string>
     <string name="text_date_create">Дата создания</string>
     <string name="text_author">Автор</string>
 
     <string name="text_hint_name_request">Введите название заявки</string>
     <string name="text_hint_custom_date">00.00.0000</string>
     <string name="ok">Ок</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

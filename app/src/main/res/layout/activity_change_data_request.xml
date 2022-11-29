@@ -45,11 +45,6 @@
                     android:text="@string/text_deposit" />
 
                 <TextView
-                    style="@style/SymbolTextView"
-                    android:layout_toEndOf="@id/noneText_deposit"
-                    android:text="@string/symbol" />
-
-                <TextView
                     android:id="@+id/deposit"
                     style="@style/SelectTextView"
                     android:layout_below="@+id/noneText_deposit" />
@@ -78,11 +73,6 @@
                     android:id="@+id/noneText_service"
                     style="@style/TittleTextView"
                     android:text="@string/text_service" />
-
-                <TextView
-                    style="@style/SymbolTextView"
-                    android:layout_toEndOf="@id/noneText_service"
-                    android:text="@string/symbol" />
 
                 <TextView
                     android:id="@+id/service"
@@ -127,11 +117,6 @@
                     android:text="@string/text_priority" />
 
                 <TextView
-                    style="@style/SymbolTextView"
-                    android:layout_toEndOf="@id/noneText_priority"
-                    android:text="@string/symbol" />
-
-                <TextView
                     android:id="@+id/priority"
                     style="@style/SelectTextView"
                     android:layout_below="@+id/noneText_priority" />
@@ -139,19 +124,31 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/layoutDateBegine"
+                android:id="@+id/layoutStatus"
                 style="@style/MyRelativeLayout"
                 android:layout_below="@+id/layoutPriority">
+
+                <TextView
+                    android:id="@+id/noneText_status"
+                    style="@style/TittleTextView"
+                    android:text="@string/text_status" />
+
+                <TextView
+                    android:id="@+id/status"
+                    style="@style/SelectTextView"
+                    android:layout_below="@+id/noneText_status" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutDateBegine"
+                style="@style/MyRelativeLayout"
+                android:layout_below="@+id/layoutStatus">
 
                 <TextView
                     android:id="@+id/noneText_date_begine"
                     style="@style/TittleTextView"
                     android:text="@string/text_date_begine" />
-
-                <TextView
-                    style="@style/SymbolTextView"
-                    android:layout_toEndOf="@id/noneText_date_begine"
-                    android:text="@string/symbol" />
 
                 <TextView
                     android:id="@+id/date_begine"
@@ -161,9 +158,26 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/layoutAuthor"
+                android:id="@+id/layoutDateEnd"
                 style="@style/MyRelativeLayout"
                 android:layout_below="@+id/layoutDateBegine">
+
+                <TextView
+                    android:id="@+id/noneText_date_end"
+                    style="@style/TittleTextView"
+                    android:text="@string/text_date_end" />
+
+                <TextView
+                    android:id="@+id/date_end"
+                    style="@style/SelectTextView"
+                    android:layout_below="@+id/noneText_date_end" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutAuthor"
+                style="@style/MyRelativeLayout"
+                android:layout_below="@+id/layoutDateEnd">
 
                 <TextView
                     android:id="@+id/noneText_author"
