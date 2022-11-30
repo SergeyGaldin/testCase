@@ -4,22 +4,29 @@ import android.content.ContentValues
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.SearchView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
+import com.example.testcase.R
 import com.example.testcase.adapters.RequestAdapter
 import com.example.testcase.constants.Constants
 import com.example.testcase.databinding.FragmentListRequestsBinding
+import com.example.testcase.interfaces.ReplaceFragment
 import com.example.testcase.models.Request
 import org.json.JSONException
 
-class ListRequestsFragment : BaseFragment() {
+class ListRequestsFragment : Fragment() {
     private lateinit var binding: FragmentListRequestsBinding
     private lateinit var adapter: RequestAdapter
     private lateinit var requestModel: Request
+    private var replaceFragment: ReplaceFragment? = null
     private val listRequest = ArrayList<Request>()
 
     override fun onCreateView(
@@ -27,6 +34,7 @@ class ListRequestsFragment : BaseFragment() {
     ): View {
         binding = FragmentListRequestsBinding.inflate(layoutInflater)
         init()
+        initializeAppBar()
         return binding.root
     }
 
@@ -39,15 +47,15 @@ class ListRequestsFragment : BaseFragment() {
             replaceFragment?.replace(AddRequestFragment(), true)
         }
         if (listRequest.isEmpty()) getDataRequest()
-        else initializeAdapter()
+        else initializeAdapter(listRequest)
     }
 
-    private fun initializeAdapter() {
+    fun initializeAdapter(list: ArrayList<Request>) {
         val itemOnClick: (Int) -> Unit = { position ->
             setFragmentResult("request_key", bundleOf("id" to listRequest[position].getNameRequest))
             replaceFragment?.replace(ChangeDataRequestFragment(), true)
         }
-        adapter = RequestAdapter(requireContext(), listRequest, itemClickListener = itemOnClick)
+        adapter = RequestAdapter(requireContext(), list, itemClickListener = itemOnClick)
         binding.recyclerView.adapter = adapter
     }
 
@@ -66,7 +74,7 @@ class ListRequestsFragment : BaseFragment() {
                     )
                     listRequest.add(requestModel)
                 }
-                initializeAdapter()
+                initializeAdapter(listRequest)
                 binding.progressBar.visibility = View.GONE
             } catch (e: JSONException) {
                 Log.d(ContentValues.TAG, "getDataRequest: ${e.message}")
@@ -77,6 +85,59 @@ class ListRequestsFragment : BaseFragment() {
             binding.progressBar.visibility = View.GONE
         }
         Volley.newRequestQueue(context).add(stringRequest)
+    }
+
+    private fun initializeAppBar() {
+        (activity as? AppCompatActivity)?.supportActionBar?.title = "Заявки"
+        replaceFragment = context as ReplaceFragment
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.app_bar_menu, menu)
+                with(menu.findItem(R.id.search).actionView as SearchView) {
+                    this.isIconifiedByDefault = false
+                    this.queryHint = "Поиск"
+                    this.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
+
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            val newList = ArrayList<Request>()
+                            for (item in listRequest) {
+                                if (item.getNameRequest.contains(newText.toString()) ||
+                                    item.getPriorityRequest.contains(newText.toString()) ||
+                                    item.getStatusRequest.contains(newText.toString()) ||
+                                    item.getDateRequest.contains(newText.toString()) ||
+                                    item.getExecutorRequest.contains(newText.toString())
+                                ) {
+                                    newList.add(
+                                        Request(
+                                            item.getNameRequest,
+                                            item.getPriorityRequest,
+                                            item.getStatusRequest,
+                                            item.getDateRequest,
+                                            item.getExecutorRequest
+                                        )
+                                    )
+                                }
+                            }
+                            initializeAdapter(newList)
+                            return true
+                        }
+                    })
+                }
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.update -> {
+                        listRequest.clear()
+                        getDataRequest()
+                    }
+                }
+                return true
+            }
+        })
     }
 
 }

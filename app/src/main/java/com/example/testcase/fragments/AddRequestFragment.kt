@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -52,6 +52,7 @@ class AddRequestFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentAddRequestBinding.inflate(inflater)
+        initializeAppBar()
         setValueFields()
         clicks()
         getDataDeposit()
@@ -87,6 +88,19 @@ class AddRequestFragment : Fragment() {
                 DividerItemDecoration.VERTICAL
             )
         )
+    }
+
+    private fun initializeAppBar() {
+        (activity as? AppCompatActivity)?.supportActionBar?.title = "Добавление заявки"
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menu.clear()
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return true
+            }
+        })
     }
 
     private fun openAlertDialogNameRequest() {
