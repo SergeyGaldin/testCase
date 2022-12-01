@@ -27,6 +27,7 @@ import com.example.testcase.constants.Constants
 import com.example.testcase.constants.Methods
 import com.example.testcase.databinding.FragmentAddRequestBinding
 import com.example.testcase.models.*
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
 import org.json.JSONException
 import org.json.JSONObject
@@ -67,7 +68,7 @@ class AddRequestFragment : Fragment() {
         binding.service.setOnClickListener { openAlertDialogService() }
         binding.executor.setOnClickListener { openAlertDialogExecutor() }
         binding.priority.setOnClickListener { openAlertDialogPriority() }
-        binding.dateBegine.setOnClickListener { openAlertDialogDateBeginRequest() }
+        binding.dateBegine.setOnClickListener { openDataPicker() }
     }
 
     private fun returnView(layout: Int): View {
@@ -121,22 +122,17 @@ class AddRequestFragment : Fragment() {
         alertDialog.show()
     }
 
-    private fun openAlertDialogDateBeginRequest() {
-        val viewAlert = returnView(R.layout.alert_dialog_date_begin)
-        val alertDialog = returnAlertDialog(viewAlert)
-        viewAlert.findViewById<Button>(R.id.buttonCancel)
-            .setOnClickListener { alertDialog.dismiss() }
-        viewAlert.findViewById<Button>(R.id.buttonOk).setOnClickListener {
-            val stringDateBeginRequest =
-                viewAlert.findViewById<TextInputEditText>(R.id.textDateBeginRequest).text.toString()
-            if (stringDateBeginRequest.isNotEmpty()) {
-                binding.dateBegine.text = stringDateBeginRequest
-                alertDialog.dismiss()
-            } else {
-                Methods.callToast(requireContext(), "Заполните поле плановая дата")
-            }
+    @SuppressLint("SimpleDateFormat")
+    private fun openDataPicker() {
+        val materialDatePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Выберите плановую дату")
+            .setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
+            .setTheme(R.style.MaterialCalendar)
+            .build()
+        materialDatePicker.addOnPositiveButtonClickListener {
+            binding.dateBegine.text = SimpleDateFormat("dd.MM.yyyy").format(Date(it))
         }
-        alertDialog.show()
+        materialDatePicker.show(requireActivity().supportFragmentManager, "MaterialDatePicker")
     }
 
     private fun openAlertDialogExecutor() {
@@ -274,6 +270,7 @@ class AddRequestFragment : Fragment() {
         Volley.newRequestQueue(context).add(stringRequest)
     }
 
+    //    Отправка данных
     private fun setDataRequest(view: View, button: Button) {
         if (checkSetData()) {
             val stringRequest = object :
@@ -313,6 +310,7 @@ class AddRequestFragment : Fragment() {
         }
     }
 
+    //    Проверка выбраны ли все данные
     private fun checkSetData(): Boolean {
         setRequest = SetRequest(
             binding.nameRequest.text.toString(),

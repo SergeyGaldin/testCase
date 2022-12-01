@@ -89,4 +89,18 @@
         <item name="android:textColor">@color/black</item>
         <item name="android:background">@color/invisible</item>
     </style>
+
+    <!-- MaterialDatePicker -->
+    <style name="MaterialCalendar" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
+        <item name="materialCalendarFullscreenTheme">
+            @style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen
+        </item>
+        <item name="materialCalendarTheme">
+            @style/ThemeOverlay.MaterialComponents.MaterialCalendar
+        </item>
+        <item name="materialCalendarHeaderToggleButton">
+            @style/Widget.MaterialComponents.MaterialCalendar.HeaderToggleButton
+        </item>
+    </style>
 </resources>

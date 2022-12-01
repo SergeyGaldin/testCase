@@ -52,7 +52,7 @@ class ListRequestsFragment : Fragment() {
 
     fun initializeAdapter(list: ArrayList<Request>) {
         val itemOnClick: (Int) -> Unit = { position ->
-            setFragmentResult("request_key", bundleOf("id" to listRequest[position].getNameRequest))
+            setFragmentResult("request_key", bundleOf("id" to listRequest[position].getIdRequest))
             replaceFragment?.replace(ChangeDataRequestFragment(), true)
         }
         adapter = RequestAdapter(requireContext(), list, itemClickListener = itemOnClick)
@@ -66,6 +66,7 @@ class ListRequestsFragment : Fragment() {
                 for (i in 0 until response.length()) {
                     val objectRequest = response.getJSONObject(i)
                     requestModel = Request(
+                        objectRequest.getString("id_request"),
                         objectRequest.getString("name_request"),
                         objectRequest.getString("name_priority"),
                         objectRequest.getString("name_status"),
@@ -112,6 +113,7 @@ class ListRequestsFragment : Fragment() {
                                 ) {
                                     newList.add(
                                         Request(
+                                            item.getIdRequest,
                                             item.getNameRequest,
                                             item.getPriorityRequest,
                                             item.getStatusRequest,

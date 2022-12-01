@@ -202,6 +202,18 @@
 
             </RelativeLayout>
 
+            <Button
+                android:id="@+id/buttonDelete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layoutDateCreate"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/background_button_red"
+                android:text="@string/delete"
+                android:textAllCaps="false"
+                android:textSize="18sp" />
+
         </RelativeLayout>
 
     </ScrollView>
