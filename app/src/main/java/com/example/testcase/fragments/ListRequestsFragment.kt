@@ -52,7 +52,8 @@ class ListRequestsFragment : Fragment() {
 
     fun initializeAdapter(list: ArrayList<Request>) {
         val itemOnClick: (Int) -> Unit = { position ->
-            setFragmentResult("request_key", bundleOf("id" to listRequest[position].getIdRequest))
+            setFragmentResult("key_list", bundleOf("list" to listRequest))
+            setFragmentResult("key_position", bundleOf("position" to position))
             replaceFragment?.replace(ChangeDataRequestFragment(), true)
         }
         adapter = RequestAdapter(requireContext(), list, itemClickListener = itemOnClick)
@@ -68,10 +69,16 @@ class ListRequestsFragment : Fragment() {
                     requestModel = Request(
                         objectRequest.getString("id_request"),
                         objectRequest.getString("name_request"),
+                        objectRequest.getString("name_deposit"),
+                        objectRequest.getString("name_service"),
                         objectRequest.getString("name_priority"),
                         objectRequest.getString("name_status"),
+                        objectRequest.getString("date_creation"),
                         objectRequest.getString("date_begine"),
-                        objectRequest.getString("author")
+                        objectRequest.getString("date_end"),
+                        objectRequest.getString("author"),
+                        objectRequest.getString("user_name"),
+                        objectRequest.getString("name_organization")
                     )
                     listRequest.add(requestModel)
                 }
@@ -108,17 +115,23 @@ class ListRequestsFragment : Fragment() {
                                 if (item.getNameRequest.contains(newText.toString()) ||
                                     item.getPriorityRequest.contains(newText.toString()) ||
                                     item.getStatusRequest.contains(newText.toString()) ||
-                                    item.getDateRequest.contains(newText.toString()) ||
+                                    item.getDateBeginRequest.contains(newText.toString()) ||
                                     item.getExecutorRequest.contains(newText.toString())
                                 ) {
                                     newList.add(
                                         Request(
                                             item.getIdRequest,
                                             item.getNameRequest,
+                                            item.getDepositRequest,
+                                            item.getServiceRequest,
                                             item.getPriorityRequest,
                                             item.getStatusRequest,
-                                            item.getDateRequest,
-                                            item.getExecutorRequest
+                                            item.getDateCreateRequest,
+                                            item.getDateBeginRequest,
+                                            item.getDateEndRequest,
+                                            item.getAuthorRequest,
+                                            item.getExecutorRequest,
+                                            item.getOrganizationRequest
                                         )
                                     )
                                 }

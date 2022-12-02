@@ -1,5 +1,6 @@
 package com.example.testcase.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -27,13 +28,14 @@ class RequestAdapter(
         return RequestAdapterVH(layoutInflater.inflate(R.layout.layout_request, parent, false))
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RequestAdapterVH, position: Int) {
         val request: Request = listRequest[position]
-        holder.nameRequest.text = request.getNameRequest
+        holder.nameRequest.text = "№" + request.getIdRequest + " " + request.getNameRequest
         holder.priorityRequest.text = request.getPriorityRequest
         holder.statusRequest.text = request.getStatusRequest
-        holder.dateRequest.text = request.getDateRequest
-        holder.executorRequest.text = request.getExecutorRequest
+        holder.dateRequest.text = request.getDateBeginRequest
+        holder.executorRequest.text = request.getExecutorRequest + " / " + request.getOrganizationRequest
     }
 
     override fun getItemCount(): Int {
