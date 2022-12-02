@@ -69,6 +69,11 @@ class ListRequestsFragment : Fragment() {
                     requestModel = Request(
                         objectRequest.getString("id_request"),
                         objectRequest.getString("name_request"),
+                        objectRequest.getString("deposit"),
+                        objectRequest.getString("service"),
+                        objectRequest.getString("executor"),
+                        objectRequest.getString("status"),
+                        objectRequest.getString("priority"),
                         objectRequest.getString("name_deposit"),
                         objectRequest.getString("name_service"),
                         objectRequest.getString("name_priority"),
@@ -122,6 +127,11 @@ class ListRequestsFragment : Fragment() {
                                         Request(
                                             item.getIdRequest,
                                             item.getNameRequest,
+                                            item.getDeposit,
+                                            item.getService,
+                                            item.getExecutor,
+                                            item.getStatus,
+                                            item.getPriority,
                                             item.getDepositRequest,
                                             item.getServiceRequest,
                                             item.getPriorityRequest,

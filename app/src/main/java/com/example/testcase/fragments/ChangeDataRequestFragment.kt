@@ -40,15 +40,17 @@ import kotlin.jvm.Throws
 class ChangeDataRequestFragment : Fragment() {
     private lateinit var binding: FragmentChangeDataRequestBinding
     private lateinit var recyclerView: RecyclerView
+    private lateinit var request: Request
+    private lateinit var listRequest: ArrayList<Request>
     private val listExecutor = ArrayList<Executor>()
     private val listDeposit = ArrayList<Deposit>()
     private val listService = ArrayList<Service>()
     private val listPriority = ArrayList<Priority>()
     private var idRequest: String? = null
-    private var idDeposit = -1
-    private var idService = -1
-    private var idExecutor = -1
-    private var idPriority = -1
+    private var idDeposit: Int? = null
+    private var idService: Int? = null
+    private var idExecutor: Int? = null
+    private var idPriority: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -63,20 +65,24 @@ class ChangeDataRequestFragment : Fragment() {
 
     private fun init() {
         setFragmentResultListener("key_list") { _, resultList ->
-            val list = resultList.getParcelableArrayList<Request>("list") as ArrayList<Request>
+            listRequest = resultList.getParcelableArrayList<Request>("list") as ArrayList<Request>
             setFragmentResultListener("key_position") { _, resultPosition ->
                 val position = resultPosition.getInt("position")
-                idRequest = list[position].getIdRequest
-                binding.nameRequest.text = list[position].getNameRequest
-                binding.deposit.text = list[position].getDepositRequest
-                binding.service.text = list[position].getServiceRequest
-                binding.executor.text = list[position].getExecutorRequest
-                binding.priority.text = list[position].getPriorityRequest
-                binding.status.text = list[position].getStatusRequest
-                binding.dateBegine.text = list[position].getDateBeginRequest
-                binding.dateEnd.text = list[position].getDateEndRequest
-                binding.author.text = list[position].getAuthorRequest
-                binding.dateCreate.text = list[position].getDateCreateRequest
+                idRequest = listRequest[position].getIdRequest
+                binding.nameRequest.text = listRequest[position].getNameRequest
+                binding.deposit.text = listRequest[position].getDepositRequest
+                binding.service.text = listRequest[position].getServiceRequest
+                binding.executor.text = listRequest[position].getExecutorRequest
+                binding.priority.text = listRequest[position].getPriorityRequest
+                binding.status.text = listRequest[position].getStatusRequest
+                binding.dateBegine.text = listRequest[position].getDateBeginRequest
+                binding.dateEnd.text = listRequest[position].getDateEndRequest
+                binding.author.text = listRequest[position].getAuthorRequest
+                binding.dateCreate.text = listRequest[position].getDateCreateRequest
+                idDeposit = listRequest[position].getDeposit.toInt()
+                idService = listRequest[position].getService.toInt()
+                idExecutor = listRequest[position].getExecutor.toInt()
+                idPriority = listRequest[position].getPriority.toInt()
             }
         }
     }
@@ -287,7 +293,41 @@ class ChangeDataRequestFragment : Fragment() {
     }
 
     private fun updateRequest() {
-
+        if (checkSetData()) {
+            val stringRequest = object :
+                StringRequest(Method.POST, Constants.URL_UPDATE_REQUEST, Response.Listener {
+                    binding.progressBar.visibility = View.GONE
+                    binding.buttonSave.isClickable = true
+                    try {
+                        val jsonObject = JSONObject(it)
+                        if (!jsonObject.getBoolean("error")) {
+                            activity?.onBackPressed()
+                        } else {
+                            Methods.callSnackbar(requireView(), jsonObject.getString("message"))
+                        }
+                    } catch (e: JSONException) {
+                        Methods.callSnackbar(requireView(), e.message.toString())
+                    }
+                }, Response.ErrorListener {
+                    binding.progressBar.visibility = View.GONE
+                    binding.buttonDelete.isClickable = true
+                    if (it?.message != null) Methods.callSnackbar(requireView(), it.message!!)
+                }) {
+                @Throws(AuthFailureError::class)
+                override fun getParams(): MutableMap<String, String> {
+                    val params: MutableMap<String, String> = HashMap()
+                    params["id_request"] = idRequest!!
+                    params["name_request"] = request.getNameRequest
+                    params["deposit"] = request.getDeposit
+                    params["service"] = request.getService
+                    params["executor"] = request.getExecutor
+                    params["priority"] = request.getPriority
+                    params["date_begine"] = request.getDateBeginRequest
+                    return params
+                }
+            }
+            Volley.newRequestQueue(context).add(stringRequest)
+        }
     }
 
     private fun deleteRequest() {
@@ -319,4 +359,21 @@ class ChangeDataRequestFragment : Fragment() {
         }
         Volley.newRequestQueue(context).add(stringRequest)
     }
+
+    private fun checkSetData(): Boolean {
+        request = Request(
+            binding.nameRequest.text.toString(),
+            idDeposit.toString(),
+            idService.toString(),
+            idExecutor.toString(),
+            idPriority.toString(),
+            binding.dateBegine.text.toString(),
+        )
+        if (request.getNameRequest.isEmpty()) {
+            Methods.callToast(requireContext(), "Заполните название заявки")
+            return false
+        }
+        return true
+    }
+
 }
