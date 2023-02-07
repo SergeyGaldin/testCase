@@ -2,7 +2,7 @@ package com.example.testcase.constants
 
 object Constants {
     // Ссылки на сервер
-    private const val ROOT_URL = "http://vhost280714.cpsite.ru/CaseTest/v1/"
+    private const val ROOT_URL = "http://vhost287635.cpsite.ru/testCasePHP-main/v1/"
     const val URL_LOGIN = ROOT_URL + "SignIn.php"
     const val URL_UPDATE_REQUEST = ROOT_URL + "UpdateRequest.php"
     const val URL_DELETE_REQUEST = ROOT_URL + "DeleteRequest.php"
